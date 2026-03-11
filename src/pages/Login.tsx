@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
+import loginCoverImg from '../assets/login_cover.png';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginPage = () => {
@@ -69,7 +70,9 @@ export const LoginPage = () => {
 
             <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">E-mail Corporativo</label>
+                <div className="flex justify-between items-center h-5">
+                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">E-mail Corporativo</label>
+                </div>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                   <input
@@ -84,7 +87,7 @@ export const LoginPage = () => {
               </div>
 
               <div className="space-y-2">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center h-5">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Senha</label>
                   <a href="#" className="text-xs font-semibold text-indigo-600 hover:underline">Esqueceu a senha?</a>
                 </div>
@@ -109,8 +112,14 @@ export const LoginPage = () => {
               </div>
 
               <div className="flex items-center">
-                <input type="checkbox" className="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-600" id="remember" />
-                <label htmlFor="remember" className="ml-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400">Lembrar-me neste dispositivo</label>
+                <input 
+                  type="checkbox" 
+                  className="w-4 h-4 accent-indigo-600 bg-slate-50 dark:bg-slate-800 border-slate-300 dark:border-slate-700 rounded focus:ring-indigo-600 focus:ring-offset-white dark:focus:ring-offset-slate-900 transition-colors cursor-pointer" 
+                  id="remember" 
+                />
+                <label htmlFor="remember" className="ml-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors">
+                  Lembrar-me neste dispositivo
+                </label>
               </div>
 
               <button
@@ -138,9 +147,9 @@ export const LoginPage = () => {
             <div className="h-full w-full flex flex-col items-center justify-center p-12 text-center">
               <div className="w-full aspect-video rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-400 overflow-hidden shadow-2xl relative">
                 <img
-                  src="https://picsum.photos/seed/dashboard/800/450"
-                  alt="Dashboard"
-                  className="w-full h-full object-cover opacity-80 mix-blend-overlay"
+                  src={loginCoverImg}
+                  alt="Gerenciamento de Projetos"
+                  className="w-full h-full object-cover opacity-90"
                 />
               </div>
               <div className="mt-12 space-y-4 max-w-md">

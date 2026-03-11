@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
-import { projects } from '../constants';
 import { ProjectInfo } from '../components/projects/ProjectInfo';
 import { ProjectMilestones } from '../components/projects/ProjectMilestones';
-import { ProjectFinancial } from '../components/projects/ProjectFinancial';
 import { ProjectComments } from '../components/projects/ProjectComments';
-import { ArrowLeft, AlertCircle, FileText, Loader2 } from 'lucide-react';
+import { ProjectTeam } from '../components/projects/ProjectTeam';
+import { ArrowLeft, AlertCircle, FileText, Loader2, Users } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from '../lib/supabase';
@@ -18,10 +17,7 @@ export const ProjectDetailsPage = () => {
   const [project, setProject] = useState<Projeto | null>(null);
   const [phasesList, setPhasesList] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'financial' | 'comments'>('info');
-
-  // Use static data for tabs that are not yet integrated
-  const staticProject = projects.find(p => p.id === 'PRJ-001') || projects[0];
+  const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'team' | 'comments'>('info');
 
   const colors = [
     "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
@@ -138,7 +134,7 @@ export const ProjectDetailsPage = () => {
               {[
                 { id: 'info', label: 'Geral' },
                 { id: 'milestones', label: 'Marcos' },
-                { id: 'financial', label: 'Financeiro' },
+                { id: 'team', label: 'Equipe' },
                 { id: 'comments', label: 'Chat' }
               ].map((tab) => (
                 <button
@@ -158,19 +154,29 @@ export const ProjectDetailsPage = () => {
             <AnimatePresence mode="wait">
               {activeTab === 'info' && (
                 <ProjectInfo
-                  description={project.descricao}
-                  objective={project.objetivo}
-                  scope={project.escopo}
-                  justification={project.justificativaInclusao}
+                  projectId={project.id}
+                  description={project.descricao || ''}
+                  objective={project.objetivo || ''}
+                  scope={project.escopo || ''}
+                  justification={project.justificativaInclusao || ''}
+                  classification={project.classificacao}
+                  priority={project.prioridade}
+                  hiringType={project.tipoContratacao}
+                  projectType={project.tipo}
+                  responsavelId={project.responsavel1}
+                  onUpdate={fetchData}
                 />
               )}
 
               {activeTab === 'milestones' && (
-                <ProjectMilestones milestones={staticProject.milestones} />
+                <ProjectMilestones 
+                  projectId={project.id} 
+                  responsavelId={project.responsavel1} 
+                />
               )}
 
-              {activeTab === 'financial' && (
-                <ProjectFinancial financials={staticProject.financials} />
+              {activeTab === 'team' && (
+                <ProjectTeam projectId={project.id} />
               )}
 
               {activeTab === 'comments' && (

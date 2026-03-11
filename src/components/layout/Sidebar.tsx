@@ -31,7 +31,6 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
     { icon: Briefcase, label: 'Projetos', path: '/projects' },
-    { icon: Flag, label: 'Marcos', path: '/milestones' },
     { icon: Users, label: 'Recursos', path: '/resources' },
     { icon: UserCog, label: 'Usuários', path: '/users' },
     { icon: BarChart3, label: 'Relatórios', path: '/reports' },

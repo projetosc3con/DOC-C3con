@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '../components/layout/Header';
-import { UserPlus, Search, Edit2, Info, Loader2, Trash2 } from 'lucide-react';
+import { UserPlus, Search, Edit2, Info, Loader2, Trash2, CheckCircle2, AlertCircle, X, Save } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
 import { Recurso } from '../types';
+import { motion, AnimatePresence } from 'motion/react';
 
 export const ResourcesPage = () => {
   const [resources, setResources] = useState<Recurso[]>([]);
@@ -11,6 +12,8 @@ export const ResourcesPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -41,7 +44,11 @@ export const ResourcesPage = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSaving) return;
+    
     setIsSaving(true);
+    setStatusMessage(null);
+    
     try {
       if (editingId) {
         const { error } = await supabase
@@ -53,6 +60,7 @@ export const ResourcesPage = () => {
           .eq('id', editingId);
 
         if (error) throw error;
+        setStatusMessage({ type: 'success', text: 'Recurso atualizado com sucesso!' });
       } else {
         const { error } = await supabase
           .from('Recursos')
@@ -62,13 +70,23 @@ export const ResourcesPage = () => {
           }]);
 
         if (error) throw error;
+        setStatusMessage({ type: 'success', text: 'Novo recurso criado com sucesso!' });
       }
 
       setFormData({ nomeExibicao: '', escopo: '' });
       setEditingId(null);
       await fetchResources();
+      
+      // Auto close success message
+      setTimeout(() => setStatusMessage(null), 3000);
     } catch (error: any) {
-      alert('Erro ao salvar recurso: ' + error.message);
+      console.error('Erro ao salvar recurso:', error);
+      setStatusMessage({ 
+        type: 'error', 
+        text: error.message.includes('row-level security') 
+          ? 'Você não tem permissão para realizar esta operação.' 
+          : 'Erro ao salvar recurso: ' + error.message 
+      });
     } finally {
       setIsSaving(false);
     }
@@ -80,22 +98,29 @@ export const ResourcesPage = () => {
       nomeExibicao: resource.nomeExibicao,
       escopo: resource.escopo
     });
+    setStatusMessage(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja excluir este recurso? Isso pode afetar usuários vinculados.')) {
-      try {
-        const { error } = await supabase
-          .from('Recursos')
-          .delete()
-          .eq('id', id);
+    try {
+      const { error } = await supabase
+        .from('Recursos')
+        .delete()
+        .eq('id', id);
 
-        if (error) throw error;
-        await fetchResources();
-      } catch (error: any) {
-        alert('Erro ao excluir: ' + error.message);
-      }
+      if (error) throw error;
+      
+      setConfirmDelete(null);
+      setStatusMessage({ type: 'success', text: 'Recurso removido com sucesso!' });
+      await fetchResources();
+      setTimeout(() => setStatusMessage(null), 3000);
+    } catch (error: any) {
+      console.error('Erro ao excluir:', error);
+      setStatusMessage({ 
+        type: 'error', 
+        text: 'Erro ao excluir: ' + error.message 
+      });
     }
   };
 
@@ -112,29 +137,58 @@ export const ResourcesPage = () => {
         <section className="xl:col-span-1">
           <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-24">
             <h3 className="text-base sm:text-lg font-bold mb-6 flex items-center gap-2 text-slate-900 dark:text-slate-50">
-              <UserPlus className="text-indigo-600" size={20} />
+              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
+                <UserPlus size={18} />
+              </div>
               {editingId ? 'Editar Recurso' : 'Novo Recurso'}
             </h3>
+
+            <AnimatePresence mode="wait">
+              {statusMessage && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className={cn(
+                    "p-3 rounded-lg flex items-start gap-3 border mb-6 text-xs font-bold uppercase tracking-widest",
+                    statusMessage.type === 'success' 
+                      ? "bg-emerald-50 border-emerald-100 text-emerald-800 dark:bg-emerald-900/10 dark:border-emerald-900/20 dark:text-emerald-400" 
+                      : "bg-red-50 border-red-100 text-red-800 dark:bg-red-900/10 dark:border-red-900/20 dark:text-red-400"
+                  )}
+                >
+                  {statusMessage.type === 'success' ? (
+                    <CheckCircle2 size={16} className="shrink-0 text-emerald-600" />
+                  ) : (
+                    <AlertCircle size={16} className="shrink-0 text-red-600" />
+                  )}
+                  <p className="flex-1">{statusMessage.text}</p>
+                  <button onClick={() => setStatusMessage(null)}>
+                    <X size={14} />
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 tracking-wider mb-1.5 dark:text-slate-300">Nome do Recurso</label>
+                <label className="block text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1.5">Nome do Recurso</label>
                 <input
                   required
                   type="text"
                   value={formData.nomeExibicao}
                   onChange={(e) => setFormData({ ...formData, nomeExibicao: e.target.value })}
-                  className="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100"
+                  className="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 transition-all font-medium"
                   placeholder="Ex: Administrador, Gestor de Obras..."
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 tracking-wider mb-1.5 dark:text-slate-300">Escopo</label>
+                <label className="block text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1.5">Escopo</label>
                 <textarea
                   required
                   rows={4}
                   value={formData.escopo}
                   onChange={(e) => setFormData({ ...formData, escopo: e.target.value })}
-                  className="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 resize-none"
+                  className="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 resize-none transition-all font-medium"
                   placeholder="Descreva as responsabilidades ou o escopo deste recurso..."
                 />
               </div>
@@ -145,17 +199,18 @@ export const ResourcesPage = () => {
                     onClick={() => {
                       setEditingId(null);
                       setFormData({ nomeExibicao: '', escopo: '' });
+                      setStatusMessage(null);
                     }}
-                    className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                   >
                     Cancelar
                   </button>
                 )}
                 <button
                   disabled={isSaving}
-                  className="flex-[2] bg-indigo-600 text-white py-2.5 rounded-lg font-bold text-sm hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="flex-[2] bg-indigo-600 text-white py-2.5 rounded-lg font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 disabled:opacity-50 active:scale-95"
                 >
-                  {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                  {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                   {editingId ? 'Salvar Alterações' : 'Criar Recurso'}
                 </button>
               </div>
@@ -226,23 +281,55 @@ export const ResourcesPage = () => {
                           {resource.contagemUsers}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => handleEdit(resource)}
-                            className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all"
-                            title="Editar"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(resource.id)}
-                            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                            title="Excluir"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
+                      <td className="px-6 py-4 text-right relative">
+                        <AnimatePresence mode="wait">
+                          {confirmDelete === resource.id ? (
+                            <motion.div
+                              key="confirm"
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 10 }}
+                              className="flex items-center justify-end gap-2"
+                            >
+                              <span className="text-[10px] font-black uppercase text-red-600 mr-2">Tem certeza?</span>
+                              <button
+                                onClick={() => handleDelete(resource.id)}
+                                className="px-3 py-1 bg-red-600 text-white rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-colors"
+                              >
+                                Sim
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                              >
+                                Não
+                              </button>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key="actions"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <button
+                                onClick={() => handleEdit(resource)}
+                                className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all"
+                                title="Editar"
+                              >
+                                <Edit2 size={16} />
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(resource.id)}
+                                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                                title="Excluir"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </td>
                     </tr>
                   ))}
@@ -255,22 +342,3 @@ export const ResourcesPage = () => {
     </div>
   );
 };
-
-const Save = ({ size, className }: { size?: number, className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size || 24}
-    height={size || 24}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v13a2 2 0 0 1-2 2z" />
-    <polyline points="17 21 17 13 7 13 7 21" />
-    <polyline points="7 3 7 8 15 8" />
-  </svg>
-);

@@ -14,12 +14,21 @@ import {
   ChevronRight,
   ChevronLeft,
   Loader2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Plus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
-import { TipoProjeto, Usuario } from '../types';
+import { TipoProjeto, Usuario, Recurso } from '../types';
+
+interface MembroEquipeForm {
+  uid: string;
+  nome: string;
+  recurso: string;
+  profileUrl: string;
+  atribuicao: string;
+}
 
 export const NewProjectPage = () => {
   const navigate = useNavigate();
@@ -42,10 +51,12 @@ export const NewProjectPage = () => {
     tipo: '',
     idTipo: '',
     tipoContratacao: '',
-    dataInicio: '',
     responsavel1: '',
     fotoRes1: ''
   });
+
+  const [teamMembers, setTeamMembers] = useState<MembroEquipeForm[]>([]);
+  const [dbResources, setDbResources] = useState<Recurso[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,6 +77,9 @@ export const NewProjectPage = () => {
           if (classList) setClassifications(classList.itens);
           if (hiringList) setHirings(hiringList.itens);
         }
+
+        const { data: recData } = await supabase.from('Recursos').select('*');
+        if (recData) setDbResources(recData);
       } catch (err) {
         console.error('Erro ao buscar dados:', err);
       } finally {
@@ -99,6 +113,26 @@ export const NewProjectPage = () => {
     }));
   };
 
+  const toggleTeamMember = (user: Usuario) => {
+    const isMember = teamMembers.some(m => m.uid === user.uuid);
+    if (isMember) {
+      setTeamMembers(prev => prev.filter(m => m.uid !== user.uuid));
+    } else {
+      const recurso = dbResources.find(r => r.id === user.idRecurso)?.nomeExibicao || 'Recurso';
+      setTeamMembers(prev => [...prev, {
+        uid: user.uuid,
+        nome: user.fullName,
+        profileUrl: user.profileUrl || '',
+        recurso,
+        atribuicao: ''
+      }]);
+    }
+  };
+
+  const updateAttribution = (uid: string, value: string) => {
+    setTeamMembers(prev => prev.map(m => m.uid === uid ? { ...m, atribuicao: value } : m));
+  };
+
   const handleNext = () => {
     if (currentStep < 3) setCurrentStep(prev => prev + 1);
   };
@@ -117,7 +151,7 @@ export const NewProjectPage = () => {
     try {
       setIsSubmitting(true);
       
-      const { error } = await supabase.from('Projetos').insert([{
+      const { data: projectData, error: projectError } = await supabase.from('Projetos').insert([{
         descricao: formData.descricao,
         escopo: formData.escopo,
         objetivo: formData.objetivo,
@@ -131,11 +165,25 @@ export const NewProjectPage = () => {
         responsavel1: formData.responsavel1 || null,
         fotoRes1: formData.fotoRes1 || null,
         status: true
-      }]);
+      }]).select().single();
 
-      if (error) throw error;
+      if (projectError) throw projectError;
       
-      // O cronograma é gerado automaticamente pelo trigger tr_generate_project_milestones_pascal
+      // Save Team Members
+      if (teamMembers.length > 0) {
+        const teamData = teamMembers.map(m => ({
+          idProjeto: projectData.id,
+          uid: m.uid,
+          nome: m.nome,
+          recurso: m.recurso,
+          profileUrl: m.profileUrl,
+          atribuicao: m.atribuicao
+        }));
+        
+        const { error: teamError } = await supabase.from('EquipeProjeto').insert(teamData);
+        if (teamError) throw teamError;
+      }
+      
       navigate('/projects');
     } catch (err) {
       console.error('Erro ao salvar projeto:', err);
@@ -432,6 +480,74 @@ export const NewProjectPage = () => {
                       </div>
                     </div>
                   )}
+
+                  <div className="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-6">
+                    <div>
+                      <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 mb-4">
+                        <Users size={16} className="text-indigo-600" />
+                        Equipe do Projeto
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {users.map((u) => {
+                          const isMember = teamMembers.some(m => m.uid === u.uuid);
+                          return (
+                            <div 
+                              key={u.uuid}
+                              className={cn(
+                                "flex flex-col p-4 rounded-2xl border-2 transition-all group",
+                                isMember
+                                  ? "border-emerald-500 bg-emerald-50/10 dark:bg-emerald-900/10"
+                                  : "border-slate-100 dark:border-slate-800 hover:border-indigo-300"
+                              )}
+                            >
+                              <div className="flex items-center gap-4 mb-3">
+                                <img 
+                                  src={u.profileUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'U')}&background=6366f1&color=fff`} 
+                                  alt={u.fullName}
+                                  className="w-10 h-10 rounded-xl object-cover"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">{u.fullName}</p>
+                                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">
+                                    {dbResources.find(r => r.id === u.idRecurso)?.nomeExibicao || 'Recurso'}
+                                  </p>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => toggleTeamMember(u)}
+                                  className={cn(
+                                    "p-2 rounded-lg transition-all",
+                                    isMember 
+                                      ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
+                                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-indigo-600"
+                                  )}
+                                >
+                                  {isMember ? <CheckCircle2 size={16} /> : <Plus size={16} />}
+                                </button>
+                              </div>
+                              
+                              {isMember && (
+                                <motion.div 
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: 'auto' }}
+                                  className="space-y-1"
+                                >
+                                  <label className="text-[9px] font-black text-emerald-600 dark:text-emerald-500 uppercase">Atribuição / Papel</label>
+                                  <input 
+                                    type="text"
+                                    placeholder="Ex: Arquiteto de Software"
+                                    value={teamMembers.find(m => m.uid === u.uuid)?.atribuicao || ''}
+                                    onChange={(e) => updateAttribution(u.uuid, e.target.value)}
+                                    className="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/50 rounded-lg text-[11px] font-bold focus:ring-1 focus:ring-emerald-500 outline-none"
+                                  />
+                                </motion.div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}

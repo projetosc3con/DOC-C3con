@@ -4,7 +4,6 @@ import { Layout } from './components/layout/Layout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { LoginPage } from './pages/Login';
 import { DashboardPage } from './pages/Dashboard';
-import { MilestonesPage } from './pages/Milestones';
 import { ProjectsPage } from './pages/Projects';
 import { ProjectDetailsPage } from './pages/ProjectDetails';
 import { ResourcesPage } from './pages/Resources';
@@ -29,7 +28,6 @@ export default function App() {
           <Route element={<Layout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="milestones" element={<MilestonesPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="projects/new" element={<NewProjectPage />} />
             <Route path="projects/:id" element={<ProjectDetailsPage />} />

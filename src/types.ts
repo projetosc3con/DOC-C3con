@@ -100,76 +100,11 @@ export interface MarcoProjeto {
   updatedAt: string;
 }
 
-// Keep existing UI types if still needed for static data mapping
-export interface Milestone {
-  id: string;
-  name: string;
-  phase: string;
-  dueDate: string;
-  status: 'CONCLUÍDO' | 'EM ANDAMENTO' | 'PENDENTE' | 'ATRASO CRÍTICO';
-  responsible: {
-    name: string;
-    avatar: string;
-  };
-}
-
+// Keep existing UI types for Dashboard static data
 export interface Project {
   id: string;
   name: string;
-  client: string;
-  deadline: string;
   health: 'Estável' | 'Crítico' | 'Em Atenção';
-  tipoContratacao: string;
-  manager: string;
   progress: number;
-  description?: string;
-  scope?: string;
-  objective?: string;
-  justification?: string;
-  startDate?: string;
-  budget?: string;
-  comments?: ProjectComment[];
-  milestones?: {
-    id: string;
-    name: string;
-    progress: number;
-    baselineDate: string;
-    scheduledDate: string;
-    active: boolean;
-  }[];
-  financials?: {
-    month: string;
-    planned: number;
-    projected: number;
-  }[];
-}
-
-export interface Resource {
-  id: string;
-  name: string;
-  type: 'Humano' | 'Material' | 'Equipamento';
-  status: 'Disponível' | 'Alocado' | 'Estoque Baixo';
-  capacity: string;
-  cost: string;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  cpf: string;
-  resourceId: string;
-  accessLevel: string;
-  avatar: string;
-}
-
-export interface ProjectComment {
-  id: string;
-  author: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
-  content: string;
-  timestamp: string;
+  deadline: string;
 }
