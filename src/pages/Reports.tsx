@@ -1,0 +1,147 @@
+import React from 'react';
+import { Header } from '../components/layout/Header';
+import { 
+  BarChart3, 
+  PieChart, 
+  TrendingUp, 
+  FileText, 
+  Download, 
+  Filter,
+  Calendar,
+  Users,
+  DollarSign,
+  ChevronRight
+} from 'lucide-react';
+import { motion } from 'motion/react';
+
+export const ReportsPage = () => {
+  const reportTypes = [
+    {
+      id: 'perf',
+      title: 'Desempenho de Projetos',
+      description: 'Análise detalhada de KPIs, progresso e saúde de todos os projetos ativos.',
+      icon: TrendingUp,
+      color: 'bg-indigo-500',
+      stats: '12 projetos incluídos'
+    },
+    {
+      id: 'fin',
+      title: 'Relatório Financeiro',
+      description: 'Acompanhamento de orçamentos, custos reais e variações financeiras por departamento.',
+      icon: DollarSign,
+      color: 'bg-emerald-500',
+      stats: 'R$ 4.2M em execução'
+    },
+    {
+      id: 'res',
+      title: 'Alocação de Recursos',
+      description: 'Visão geral da ocupação da equipe, gargalos e disponibilidade de equipamentos.',
+      icon: Users,
+      color: 'bg-purple-500',
+      stats: '85% taxa de ocupação'
+    },
+    {
+      id: 'cron',
+      title: 'Status de Cronograma',
+      description: 'Monitoramento de marcos, caminhos críticos e atrasos previstos.',
+      icon: Calendar,
+      color: 'bg-amber-500',
+      stats: '4 marcos em atraso'
+    },
+    {
+      id: 'qual',
+      title: 'Qualidade e Riscos',
+      description: 'Matriz de riscos, planos de mitigação e indicadores de qualidade PMBOK.',
+      icon: PieChart,
+      color: 'bg-red-500',
+      stats: '2 riscos críticos'
+    },
+    {
+      id: 'exec',
+      title: 'Sumário Executivo',
+      description: 'Visão consolidada de alto nível para diretoria e stakeholders.',
+      icon: FileText,
+      color: 'bg-slate-700',
+      stats: 'Atualizado hoje'
+    }
+  ];
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header title="Relatórios e BI" subtitle="Gere relatórios detalhados e insights baseados em dados para tomada de decisão." />
+      
+      <div className="p-4 sm:p-8 space-y-8">
+        {/* Quick Filters */}
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-4 items-center">
+          <div className="flex items-center gap-2 text-sm font-bold text-slate-500 mr-4">
+            <Filter size={18} />
+            Filtros Globais:
+          </div>
+          <select className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
+            <option>Este Mês</option>
+            <option>Último Trimestre</option>
+            <option>Ano Atual</option>
+            <option>Personalizado</option>
+          </select>
+          <select className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
+            <option>Todos os Departamentos</option>
+            <option>TI</option>
+            <option>Marketing</option>
+            <option>Infraestrutura</option>
+          </select>
+        </div>
+
+        {/* Reports Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reportTypes.map((report, index) => (
+            <motion.div
+              key={report.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-indigo-600/5 transition-all group cursor-pointer overflow-hidden"
+            >
+              <div className="p-6">
+                <div className={`${report.color} w-12 h-12 rounded-xl flex items-center justify-center text-white mb-6 shadow-lg shadow-current/20 group-hover:scale-110 transition-transform`}>
+                  <report.icon size={24} />
+                </div>
+                
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2 group-hover:text-indigo-600 transition-colors">
+                  {report.title}
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+                  {report.description}
+                </p>
+                
+                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                    {report.stats}
+                  </span>
+                  <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm">
+                    Gerar
+                    <ChevronRight size={16} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Export Section */}
+        <div className="bg-indigo-600 rounded-2xl p-8 text-white flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl shadow-indigo-600/20">
+          <div className="text-center lg:text-left">
+            <h2 className="text-2xl font-bold mb-2">Exportação em Lote</h2>
+            <p className="text-indigo-100 max-w-md">
+              Selecione múltiplos relatórios para gerar um pacote consolidado em PDF ou Excel para apresentações mensais.
+            </p>
+          </div>
+          <button className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-indigo-50 transition-all flex items-center gap-3 shadow-lg">
+            <Download size={20} />
+            Exportar Todos
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
