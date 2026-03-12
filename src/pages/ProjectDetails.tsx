@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { ProjectInfo } from '../components/projects/ProjectInfo';
 import { ProjectMilestones } from '../components/projects/ProjectMilestones';
+import { ProjectFlows } from '../components/projects/ProjectFlows';
 import { ProjectComments } from '../components/projects/ProjectComments';
 import { ProjectTeam } from '../components/projects/ProjectTeam';
 import { ArrowLeft, AlertCircle, FileText, Loader2, Users } from 'lucide-react';
@@ -14,10 +15,25 @@ import { Projeto } from '../types';
 export const ProjectDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [project, setProject] = useState<Projeto | null>(null);
   const [phasesList, setPhasesList] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'team' | 'comments'>('info');
+  
+  const initialTab = searchParams.get('tab') as 'info' | 'milestones' | 'team' | 'comments' | 'flows' || 'info';
+  const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'team' | 'comments' | 'flows'>(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab as any);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tabId: typeof activeTab) => {
+    setActiveTab(tabId);
+    setSearchParams({ tab: tabId });
+  };
 
   const colors = [
     "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
@@ -135,11 +151,12 @@ export const ProjectDetailsPage = () => {
                 { id: 'info', label: 'Geral' },
                 { id: 'milestones', label: 'Marcos' },
                 { id: 'team', label: 'Equipe' },
-                { id: 'comments', label: 'Chat' }
+                { id: 'flows', label: 'Fluxos' },
+                { id: 'comments', label: 'Histórico' }
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => handleTabChange(tab.id as any)}
                   className={cn(
                     "px-6 py-3 text-sm font-black transition-all relative whitespace-nowrap font-semibold tracking-widest",
                     activeTab === tab.id ? "text-indigo-600" : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
@@ -169,7 +186,14 @@ export const ProjectDetailsPage = () => {
               )}
 
               {activeTab === 'milestones' && (
-                <ProjectMilestones 
+                <ProjectMilestones
+                  projectId={project.id}
+                  responsavelId={project.responsavel1}
+                />
+              )}
+
+              {activeTab === 'flows' && (
+                <ProjectFlows 
                   projectId={project.id} 
                   responsavelId={project.responsavel1} 
                 />

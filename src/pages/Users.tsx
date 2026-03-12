@@ -16,7 +16,8 @@ import {
   UserX,
   UserCheck,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  RotateCcw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from '../lib/supabase';
@@ -34,6 +35,11 @@ export const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<Usuario | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    status: '',
+    idRecurso: ''
+  });
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -65,10 +71,24 @@ export const UsersPage = () => {
     fetchData();
   }, []);
 
-  const filteredUsers = users.filter(user =>
-    user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = users.filter(user => {
+    const searchMatch = user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const statusMatch = !filters.status || (filters.status === 'Ativo' ? user.ativo : !user.ativo);
+    const recursoMatch = !filters.idRecurso || user.idRecurso === filters.idRecurso;
+
+    return searchMatch && statusMatch && recursoMatch;
+  });
+
+  const clearFilters = () => {
+    setFilters({
+      status: '',
+      idRecurso: ''
+    });
+  };
+
+  const activeFiltersCount = Object.values(filters).filter(Boolean).length;
 
   const handleOpenModal = (user?: Usuario) => {
     if (user) {
@@ -122,9 +142,22 @@ export const UsersPage = () => {
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+            <button
+              onClick={() => setIsFilterOpen(true)}
+              className={cn(
+                "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative",
+                activeFiltersCount > 0 
+                  ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300" 
+                  : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+              )}
+            >
               <Filter size={18} />
               Filtros
+              {activeFiltersCount > 0 && (
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-in zoom-in duration-300">
+                  {activeFiltersCount}
+                </span>
+              )}
             </button>
             {isAdmin && (
               <button
@@ -240,6 +273,90 @@ export const UsersPage = () => {
         dbResources={dbResources} 
         onSuccess={fetchData} 
       />
+
+      {/* Filter Offcanvas */}
+      <AnimatePresence>
+        {isFilterOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsFilterOpen(false)}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40"
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl z-50 overflow-y-auto"
+            >
+              <div className="p-6 space-y-8">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                  <div className="flex items-center gap-2">
+                    <Filter className="text-indigo-600" size={20} />
+                    <h2 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Filtros de Usuários</h2>
+                  </div>
+                  <button
+                    onClick={() => setIsFilterOpen(false)}
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  >
+                    <X size={20} className="text-slate-400" />
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Status */}
+                  <div>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Status do Usuário</label>
+                    <select 
+                      value={filters.status}
+                      onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                    >
+                      <option value="">Todos os status</option>
+                      <option value="Ativo">Ativo</option>
+                      <option value="Inativo">Inativo</option>
+                    </select>
+                  </div>
+
+                  {/* Recurso */}
+                  <div>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Recurso Vinculado</label>
+                    <select 
+                      value={filters.idRecurso}
+                      onChange={(e) => setFilters({ ...filters, idRecurso: e.target.value })}
+                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                    >
+                      <option value="">Todos os recursos</option>
+                      {dbResources.map(r => (
+                        <option key={r.id} value={r.id}>{r.nomeExibicao}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pt-8 flex flex-col gap-3">
+                  <button
+                    onClick={clearFilters}
+                    className="w-full py-3 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                  >
+                    <RotateCcw size={14} />
+                    Limpar Filtros
+                  </button>
+                  <button
+                    onClick={() => setIsFilterOpen(false)}
+                    className="w-full py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 transition-all active:scale-95"
+                  >
+                    Aplicar filtros
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

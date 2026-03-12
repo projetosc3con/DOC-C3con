@@ -77,6 +77,7 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
         const { error: signUpError } = await supabase.auth.signInWithOtp({
           email: formData.email,
           options: {
+            emailRedirectTo: 'https://doc-c3con.vercel.app',
             data: {
               fullName: formData.fullName,
               idRecurso: formData.idRecurso || null,

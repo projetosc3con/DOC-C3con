@@ -108,3 +108,33 @@ export interface Project {
   progress: number;
   deadline: string;
 }
+
+export interface FluxoProjeto {
+  id: string;
+  nome: string;
+  descricao: string | null;
+  idProjeto: number;
+  urlAnexo: string | null;
+  faseAoFim: string | null;
+  idMarco: string | null;
+  aprovador: string | null;
+  atribuidoA: string | null;
+  exigeAnexo: boolean;
+  dataLimite: string | null;
+  status: 'Criação' | 'Aprovação Solicitada' | 'Aprovado' | 'Reprovado';
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Log {
+  id: string;
+  titulo: string;
+  descricao: string;
+  tabelaOrigem: string;
+  uid: string; // Quem gerou
+  timestamp: string;
+  notificar: string; // Usuário a notificar
+  projetoId?: number; // ID do projeto relacionado
+  lido: boolean;
+}

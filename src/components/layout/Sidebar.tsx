@@ -33,8 +33,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
     { icon: Briefcase, label: 'Projetos', path: '/projects' },
     { icon: Users, label: 'Recursos', path: '/resources' },
     { icon: UserCog, label: 'Usuários', path: '/users' },
-    { icon: BarChart3, label: 'Relatórios', path: '/reports' },
-    { icon: AlertCircle, label: 'Erro 404', path: '/404' },
+    { icon: BarChart3, label: 'Relatórios', path: '/reports' }
   ];
 
   const handleSignOut = async () => {

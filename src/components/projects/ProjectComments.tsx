@@ -80,7 +80,7 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
             <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <MessageSquare size={18} className="text-indigo-600" />
-                    <h3 className="font-bold text-sm">Chat do Projeto</h3>
+                    <h3 className="font-bold text-sm">Histórico do Projeto</h3>
                 </div>
             </div>
 
