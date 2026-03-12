@@ -13,6 +13,16 @@ import { supabase } from '../lib/supabase';
 import { Projeto } from '../types';
 import { getPhaseStyles } from '../utils/projectColors';
 import { useAuth } from '../context/AuthContext';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const mockPhysicalProgressData = [
+  { name: 'Jan', planned: 5, actual: 5 },
+  { name: 'Fev', planned: 15, actual: 12 },
+  { name: 'Mar', planned: 30, actual: 25 },
+  { name: 'Abr', planned: 50, actual: 48 },
+  { name: 'Mai', planned: 75, actual: 60 },
+  { name: 'Jun', planned: 100, actual: 80 },
+];
 
 export const ProjectDetailsPage = () => {
   const { id } = useParams();
@@ -120,7 +130,7 @@ export const ProjectDetailsPage = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-8">
           {/* Left Column: Main Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tabs */}
@@ -190,12 +200,70 @@ export const ProjectDetailsPage = () => {
           {/* Right Column: Sidebar Stats */}
           <div className="space-y-6">
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">Status Atual</h3>
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+                <div className="flex items-center gap-2">
+                  <div className={cn(
+                    "w-3 h-3 rounded-full shadow-sm",
+                    project.status ? "bg-emerald-500" : "bg-red-500"
+                  )} />
+                  <span className="text-xs font-black uppercase tracking-widest text-slate-500">Status</span>
+                </div>
+                <span className={cn(
+                  "text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest",
+                  project.status ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20" : "text-red-600 bg-red-50 dark:bg-red-900/20"
+                )}>
+                  {project.status ? 'Ativo' : 'Inativo'}
+                </span>
+              </div>
+
+              {/* Avanço Físico (Mocked) */}
+              <div className="pt-6 ">
+                <h4 className="text-[10px] text-slate-400 font-black font-semibold tracking-widest mb-2">Avanço Físico</h4>
+                <div className="h-[180px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={mockPhysicalProgressData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorPlannedProject" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#cbd5e1" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#cbd5e1" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis
+                        dataKey="name"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 10, fill: '#64748b' }}
+                      />
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 10, fill: '#64748b' }}
+                      />
+                      <Tooltip
+                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '10px' }}
+                      />
+                      <Area type="monotone" dataKey="planned" name="Previsto (%)" stroke="#94a3b8" strokeDasharray="4 4" fillOpacity={1} fill="url(#colorPlannedProject)" strokeWidth={2} />
+                      <Area type="monotone" dataKey="actual" name="Realizado (%)" stroke="#ec4899" fillOpacity={0} strokeWidth={2} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex justify-center gap-4 mt-2">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-slate-400"></div>
+                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Previsto</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-pink-500"></div>
+                    <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Realizado</span>
+                  </div>
+                </div>
+              </div>
 
               <div className="space-y-6">
-                <div>
+                <div className="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs font-bold text-slate-500">Fase do Projeto</span>
+                    <span className="text-[10px] text-slate-400 font-black font-semibold tracking-widest mb-2">Fase do Projeto</span>
                   </div>
                   <div className={cn(
                     "flex items-center gap-2 px-4 py-2 rounded-xl justify-center font-black text-xs uppercase tracking-widest",
@@ -206,24 +274,8 @@ export const ProjectDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-                  <div className="flex items-center gap-2">
-                    <div className={cn(
-                      "w-3 h-3 rounded-full shadow-sm",
-                      project.status ? "bg-emerald-500" : "bg-red-500"
-                    )} />
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-500">Disponibilidade</span>
-                  </div>
-                  <span className={cn(
-                    "text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest",
-                    project.status ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20" : "text-red-600 bg-red-50 dark:bg-red-900/20"
-                  )}>
-                    {project.status ? 'Ativo' : 'Inativo'}
-                  </span>
-                </div>
-
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-                  <p className="text-[10px] text-slate-400 font-black font-semibold tracking-widest mb-4">Gestor do projeto</p>
+                  <p className="text-[10px] text-slate-400 font-black font-semibold tracking-widest mb-2">Gestor do projeto</p>
                   <div className="flex items-center gap-3">
                     <img
                       src={project.fotoRes1 || `https://ui-avatars.com/api/?name=${encodeURIComponent(project.responsavel1 || 'User')}&background=6366f1&color=fff`}

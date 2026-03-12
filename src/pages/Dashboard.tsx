@@ -31,6 +31,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { projects } from '../constants';
 import { cn } from '../lib/utils';
+import { supabase } from '../lib/supabase';
 
 const data = [
   { name: 'Jan', budget: 4000, actual: 2400 },
@@ -83,6 +84,41 @@ export const DashboardPage = () => {
     tipo: '',
     responsavel: ''
   });
+
+  const [phasesList, setPhasesList] = useState<string[]>([]);
+  const [classificacoes, setClassificacoes] = useState<string[]>([]);
+  const [contratacoes, setContratacoes] = useState<string[]>([]);
+  const [tiposProjeto, setTiposProjeto] = useState<{ id: string, nome: string }[]>([]);
+  const [usuarios, setUsuarios] = useState<{ uuid: string, fullName: string }[]>([]);
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        const [
+          { data: listPhases },
+          { data: listClass },
+          { data: listContr },
+          { data: tiposData },
+          { data: usersData }
+        ] = await Promise.all([
+          supabase.from('Listas').select('itens').eq('nomeLista', 'Fases de projeto').maybeSingle(),
+          supabase.from('Listas').select('itens').eq('nomeLista', 'Classificações').maybeSingle(),
+          supabase.from('Listas').select('itens').eq('nomeLista', 'Contratações').maybeSingle(),
+          supabase.from('TiposProjeto').select('id, nome'),
+          supabase.from('Usuarios').select('uuid, fullName')
+        ]);
+
+        if (listPhases) setPhasesList(listPhases.itens || []);
+        if (listClass) setClassificacoes(listClass.itens || []);
+        if (listContr) setContratacoes(listContr.itens || []);
+        if (tiposData) setTiposProjeto(tiposData);
+        if (usersData) setUsuarios(usersData);
+      } catch (err) {
+        console.error('Erro ao carregar filtros:', err);
+      }
+    };
+    fetchMetadata();
+  }, []);
 
   const activeFiltersCount = Object.values(filters).filter(Boolean).length;
 
@@ -177,13 +213,13 @@ export const DashboardPage = () => {
                   </div>
 
                   {/* Base labels */}
-                  <div className="absolute bottom-2 left-0 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded-lg z-10">0%</div>
-                  <div className="absolute -top-4 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-2.5 py-0.5 rounded-full z-10 shadow-sm border border-slate-100 dark:border-slate-800">100%</div>
-                  <div className="absolute bottom-2 right-0 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded-lg z-10">200%</div>
+                  <div className="absolute bottom-2 left-0 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded-lg">0%</div>
+                  <div className="absolute -top-4 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-2.5 py-0.5 rounded-full shadow-sm border border-slate-100 dark:border-slate-800">100%</div>
+                  <div className="absolute bottom-2 right-0 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded-lg">200%</div>
 
                   {/* Needle */}
                   <div
-                    className="absolute bottom-0 left-1/2 origin-bottom transition-transform duration-1000 ease-out z-20"
+                    className="absolute bottom-0 left-1/2 origin-bottom transition-transform duration-1000 ease-out"
                     style={{ height: '95px', transform: `translateX(-50%) rotate(${rotationDeg}deg)` }}
                   >
                     {/* Ponteiro */}
@@ -394,7 +430,7 @@ export const DashboardPage = () => {
                 </div>
 
                 <div className="space-y-6">
-                  {/* Tipo de Projeto (Mocked for now) */}
+                  {/* Tipo de Projeto */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Tipo de Projeto</label>
                     <select
@@ -403,8 +439,7 @@ export const DashboardPage = () => {
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os tipos</option>
-                      <option value="Construção">Construção</option>
-                      <option value="TI">TI</option>
+                      {tiposProjeto.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
                     </select>
                   </div>
 
@@ -417,11 +452,7 @@ export const DashboardPage = () => {
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as fases</option>
-                      <option value="Iniciação">Iniciação</option>
-                      <option value="Planejamento">Planejamento</option>
-                      <option value="Execução">Execução</option>
-                      <option value="Monitoramento">Monitoramento</option>
-                      <option value="Encerramento">Encerramento</option>
+                      {phasesList.map(f => <option key={f} value={f}>{f}</option>)}
                     </select>
                   </div>
 
@@ -434,8 +465,7 @@ export const DashboardPage = () => {
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as classificações</option>
-                      <option value="Estratégico">Estratégico</option>
-                      <option value="Operacional">Operacional</option>
+                      {classificacoes.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
 
@@ -448,8 +478,7 @@ export const DashboardPage = () => {
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as contratações</option>
-                      <option value="Interna">Interna</option>
-                      <option value="Externa">Externa</option>
+                      {contratacoes.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
 
@@ -477,7 +506,7 @@ export const DashboardPage = () => {
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os responsáveis</option>
-                      {/* Will populate from API or dynamic data later */}
+                      {usuarios.map(u => <option key={u.uuid} value={u.uuid}>{u.fullName}</option>)}
                     </select>
                   </div>
 

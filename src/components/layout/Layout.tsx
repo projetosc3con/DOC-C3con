@@ -17,7 +17,7 @@ export const Layout = () => {
   const needsPasswordSetup = user?.user_metadata?.needsPasswordSetup;
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-950">
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -39,7 +39,7 @@ export const Layout = () => {
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
 
-      <main className="flex-1 flex flex-col min-w-0 h-full">
+      <main className="flex-1 flex flex-col min-w-0 h-full relative z-10">
         {/* Mobile Header Toggle (only visible on small screens) */}
         <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
@@ -60,7 +60,7 @@ export const Layout = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto relative z-10"
         >
           <Outlet />
         </motion.div>
