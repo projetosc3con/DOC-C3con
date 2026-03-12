@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
-import { Calendar, MoreVertical, AlertCircle, CheckCircle2, Info, ChevronRight, Loader2, Plus, Search, Filter, X, RotateCcw, User } from 'lucide-react';
+import { Calendar, MoreVertical, AlertCircle, CheckCircle2, Info, ChevronRight, Loader2, Plus, Search, Filter, X, RotateCcw, User, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { motion, AnimatePresence } from 'motion/react';
+import { getPhaseStyles } from '../utils/projectColors';
 
 interface Projeto {
   id: number;
@@ -21,6 +22,10 @@ interface Projeto {
   status: boolean;
   justificativaInclusao: string;
   createdAt: string;
+  proximoMarco?: {
+    nome: string;
+    data: string;
+  };
 }
 
 export const ProjectsPage = () => {
@@ -29,6 +34,11 @@ export const ProjectsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
 
   // Filter options state
   const [phasesList, setPhasesList] = useState<string[]>([]);
@@ -47,54 +57,93 @@ export const ProjectsPage = () => {
     responsavel: ''
   });
 
-  const colors = [
-    "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
-    "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
-    "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
-    "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-    "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300",
-    "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
-    "bg-slate-100 text-slate-700 dark:bg-slate-900/40 dark:text-slate-300"
-  ];
-
-  const dotColors = [
-    "bg-indigo-500",
-    "bg-amber-500",
-    "bg-emerald-500",
-    "bg-blue-500",
-    "bg-rose-500",
-    "bg-violet-500",
-    "bg-slate-500"
-  ];
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      // Fetch all required data in parallel
+      // 1. Fetch metadata in parallel
       const [
         { data: listPhases },
         { data: listClass },
         { data: listContr },
         { data: tiposData },
-        { data: usersData },
-        { data: projectsData, error: projError }
+        { data: usersData }
       ] = await Promise.all([
         supabase.from('Listas').select('itens').eq('nomeLista', 'Fases de projeto').single(),
         supabase.from('Listas').select('itens').eq('nomeLista', 'Classificações').maybeSingle(),
         supabase.from('Listas').select('itens').eq('nomeLista', 'Contratações').maybeSingle(),
         supabase.from('TiposProjeto').select('id, nome'),
-        supabase.from('Usuarios').select('uuid, fullName'),
-        supabase.from('Projetos').select('*').order('createdAt', { ascending: false })
+        supabase.from('Usuarios').select('uuid, fullName')
       ]);
-
-      if (projError) throw projError;
 
       if (listPhases) setPhasesList(listPhases.itens || []);
       if (listClass) setClassificacoes(listClass.itens || []);
       if (listContr) setContratacoes(listContr.itens || []);
       if (tiposData) setTiposProjeto(tiposData);
       if (usersData) setUsuarios(usersData);
-      setProjects(projectsData || []);
+
+      // 2. Fetch Projects with server-side pagination and filters
+      let query = supabase
+        .from('Projetos')
+        .select('*', { count: 'exact' });
+
+      // Apply Filter conditions (Server Side)
+      if (filters.fase) query = query.eq('fase', filters.fase);
+      if (filters.contratacao) query = query.eq('tipoContratacao', filters.contratacao);
+      if (filters.classificacao) query = query.eq('classificacao', filters.classificacao);
+      if (filters.prioridade) query = query.eq('prioridade', filters.prioridade);
+      if (filters.tipo) query = query.eq('tipo', filters.tipo);
+      if (filters.responsavel) query = query.eq('responsavel1', filters.responsavel);
+
+      if (searchTerm) {
+        // Note: ILIKE is expensive on large tables, but here we cover ID and Description
+        if (!isNaN(Number(searchTerm))) {
+          query = query.or(`id.eq.${searchTerm},descricao.ilike.%${searchTerm}%`);
+        } else {
+          query = query.ilike('descricao', `%${searchTerm}%`);
+        }
+      }
+
+      const from = (currentPage - 1) * pageSize;
+      const to = from + pageSize - 1;
+
+      const { data: projectsData, error: projError, count } = await query
+        .order('id', { ascending: true })
+        .range(from, to);
+
+      if (projError) throw projError;
+
+      setTotalCount(count || 0);
+
+      // 3. For each project, fetch the nearest upcoming milestone
+      // We do this in one batch for better performance (one query for all visible projects)
+      if (projectsData && projectsData.length > 0) {
+        const projectIds = projectsData.map(p => p.id);
+        const today = new Date().toISOString().split('T')[0];
+
+        const { data: milestonesData } = await supabase
+          .from('MarcosProjeto')
+          .select('idProjeto, nome, dataPrevista')
+          .in('idProjeto', projectIds)
+          .not('status', 'in', '("Concluido","Não aplicável")')
+          .gte('dataPrevista', today)
+          .order('dataPrevista', { ascending: true });
+
+        const projectsWithMilestones = projectsData.map(project => {
+          const nextMilestone = milestonesData?.find(m => m.idProjeto === project.id);
+          return {
+            ...project,
+            proximoMarco: nextMilestone ? {
+              nome: nextMilestone.nome,
+              data: nextMilestone.dataPrevista
+            } : undefined
+          };
+        });
+
+        setProjects(projectsWithMilestones);
+      } else {
+        setProjects([]);
+      }
     } catch (err) {
       console.error('Erro ao carregar dados:', err);
     } finally {
@@ -104,30 +153,11 @@ export const ProjectsPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage, pageSize, filters, searchTerm]);
 
-  const getPhaseStyles = (fase: string) => {
-    const index = phasesList.indexOf(fase);
-    const safeIndex = index === -1 ? 6 : index % colors.length;
-    return {
-      wrapper: colors[safeIndex],
-      dot: dotColors[safeIndex]
-    };
-  };
 
-  const filteredProjects = projects.filter(project => {
-    const searchMatch = project.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                       project.id.toString().includes(searchTerm);
-    
-    const faseMatch = !filters.fase || project.fase === filters.fase;
-    const contratacaoMatch = !filters.contratacao || project.tipoContratacao === filters.contratacao;
-    const classMatch = !filters.classificacao || project.classificacao === filters.classificacao;
-    const prioridadeMatch = !filters.prioridade || project.prioridade === filters.prioridade;
-    const tipoMatch = !filters.tipo || project.tipo === filters.tipo;
-    const responsavelMatch = !filters.responsavel || project.responsavel1 === filters.responsavel;
-
-    return searchMatch && faseMatch && contratacaoMatch && classMatch && prioridadeMatch && tipoMatch && responsavelMatch;
-  });
+  // Client side search is now handled in fetchData for performance
+  const filteredProjects = projects;
 
   const clearFilters = () => {
     setFilters({
@@ -165,8 +195,8 @@ export const ProjectsPage = () => {
               onClick={() => setIsFilterOpen(true)}
               className={cn(
                 "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative",
-                activeFiltersCount > 0 
-                  ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300" 
+                activeFiltersCount > 0
+                  ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300"
                   : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
               )}
             >
@@ -179,8 +209,8 @@ export const ProjectsPage = () => {
               )}
             </button>
             <button
-               onClick={() => navigate('/projects/new')}
-               className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 active:scale-95"
+              onClick={() => navigate('/projects/new')}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 active:scale-95"
             >
               <Plus size={18} />
               Novo Projeto
@@ -193,9 +223,9 @@ export const ProjectsPage = () => {
             <table className="w-full text-left">
               <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
                 <tr>
-                  <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Projeto</th>
+                  <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Descrição do projeto</th>
                   <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Classificação</th>
-                  <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Criado em</th>
+                  <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Próximo Marco</th>
                   <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest text-center">Fase Atual</th>
                   <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
                 </tr>
@@ -214,7 +244,7 @@ export const ProjectsPage = () => {
                       <div className="flex flex-col items-center justify-center text-slate-400">
                         <Search size={40} className="mb-4 opacity-20" />
                         <p className="text-sm font-medium">Nenhum projeto encontrado com os filtros aplicados.</p>
-                        <button 
+                        <button
                           onClick={clearFilters}
                           className="mt-2 text-indigo-600 text-[10px] font-black uppercase hover:underline"
                         >
@@ -224,7 +254,7 @@ export const ProjectsPage = () => {
                     </td>
                   </tr>
                 ) : filteredProjects.map((project) => {
-                  const styles = getPhaseStyles(project.fase);
+                  const styles = getPhaseStyles(project.fase, phasesList);
                   return (
                     <tr
                       key={project.id}
@@ -237,17 +267,26 @@ export const ProjectsPage = () => {
                             {project.id}
                           </div>
                           <div>
-                            <p className="font-semibold text-slate-700 dark:text-slate-100 group-hover:text-indigo-600 transition-colors tracking-tight">{project.descricao}</p>
+                            <p className="font-semibold text-slate-600 dark:text-slate-100 group-hover:text-indigo-600 transition-colors tracking-tight">{project.descricao}</p>
                             <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">{project.tipo}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm font-bold text-slate-700 dark:text-slate-300">{project.classificacao}</td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                          <Calendar size={16} className="text-slate-400" />
-                          {format(new Date(project.createdAt), "dd 'de' MMM, yyyy", { locale: ptBR })}
-                        </div>
+                        {project.proximoMarco ? (
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-2 text-[11px] font-bold text-slate-600 dark:text-slate-300 mb-0.5">
+                              <Calendar size={12} className="text-slate-400" />
+                              <span>{project.proximoMarco.nome}</span>
+                            </div>
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-5">
+                              {format(new Date(project.proximoMarco.data), "dd/MM/yyyy")}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-[10px] text-slate-400 italic font-medium">Sem marcos pendentes</span>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex justify-center">
@@ -273,6 +312,62 @@ export const ProjectsPage = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination */}
+          {!isLoading && totalCount > 0 && (
+            <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <span className="text-xs font-bold text-slate-500 tracking-widest">
+                  Exibindo {projects.length} de {totalCount} projetos
+                </span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md text-[10px] font-slate-500 tracking-widest p-1 focus:ring-1 focus:ring-indigo-600 outline-none"
+                >
+                  <option value={5}>5 por página</option>
+                  <option value={10}>10 por página</option>
+                  <option value={20}>20 por página</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(prev => prev - 1)}
+                  className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.ceil(totalCount / pageSize) }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={cn(
+                        "w-8 h-8 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-sm",
+                        currentPage === i + 1
+                          ? "bg-indigo-600 text-white"
+                          : "bg-white dark:bg-slate-900 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                      )}
+                    >
+                      {i + 1}
+                    </button>
+                  )).slice(Math.max(0, currentPage - 2), Math.min(Math.ceil(totalCount / pageSize), currentPage + 1))}
+                </div>
+                <button
+                  disabled={currentPage === Math.ceil(totalCount / pageSize)}
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+                >
+                  <ChevronRightIcon size={16} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <AnimatePresence>
@@ -310,7 +405,7 @@ export const ProjectsPage = () => {
                   {/* Tipo de Projeto */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Tipo de Projeto</label>
-                    <select 
+                    <select
                       value={filters.tipo}
                       onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
@@ -323,7 +418,7 @@ export const ProjectsPage = () => {
                   {/* Fase */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Fase do Projeto</label>
-                    <select 
+                    <select
                       value={filters.fase}
                       onChange={(e) => setFilters({ ...filters, fase: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
@@ -336,7 +431,7 @@ export const ProjectsPage = () => {
                   {/* Classificação */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Classificação</label>
-                    <select 
+                    <select
                       value={filters.classificacao}
                       onChange={(e) => setFilters({ ...filters, classificacao: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
@@ -349,7 +444,7 @@ export const ProjectsPage = () => {
                   {/* Contratação */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Tipo de Contratação</label>
-                    <select 
+                    <select
                       value={filters.contratacao}
                       onChange={(e) => setFilters({ ...filters, contratacao: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
@@ -362,7 +457,7 @@ export const ProjectsPage = () => {
                   {/* Prioridade */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Prioridade</label>
-                    <select 
+                    <select
                       value={filters.prioridade}
                       onChange={(e) => setFilters({ ...filters, prioridade: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
@@ -377,7 +472,7 @@ export const ProjectsPage = () => {
                   {/* Responsável */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Responsável</label>
-                    <select 
+                    <select
                       value={filters.responsavel}
                       onChange={(e) => setFilters({ ...filters, responsavel: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"

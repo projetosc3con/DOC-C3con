@@ -32,6 +32,7 @@ export const SettingsPage = () => {
   
   const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [editingItemName, setEditingItemName] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<string | number | null>(null);
 
   const listConfig: Record<string, { tableKey: string, label: string }> = {
     phases: { tableKey: 'Fases de projeto', label: 'Fase' },
@@ -61,7 +62,7 @@ export const SettingsPage = () => {
         setListItems(data.itens);
         const colors = ['bg-blue-500', 'bg-amber-500', 'bg-emerald-500', 'bg-indigo-500', 'bg-slate-500', 'bg-rose-500', 'bg-violet-500'];
         const mapped = data.itens.map((item: string, index: number) => ({
-          id: index + 1,
+          id: item, // Use the name as ID for stability
           name: item,
           description: `Parâmetro de ${listConfig[tab].label.toLowerCase()} definido como ${item}.`,
           color: colors[index % colors.length]
@@ -75,7 +76,10 @@ export const SettingsPage = () => {
 
   useEffect(() => {
     if (listConfig[activeTab]) {
+      setConfirmDelete(null);
       fetchListFromSupabase(activeTab);
+    } else {
+      setConfirmDelete(null);
     }
   }, [activeTab]);
 
@@ -99,21 +103,31 @@ export const SettingsPage = () => {
     const trimmed = newName.trim();
     if (!trimmed) return;
 
+    // Converte para minúsculas apenas para comparação, para evitar duplicatas indiferentes a caixa
+    const itemExists = listItems.some(item => item.toLowerCase() === trimmed.toLowerCase());
+
     if (editingItemName) {
-      if (editingItemName === trimmed) return;
-      if (listItems.includes(trimmed)) {
+      if (editingItemName === trimmed) {
+        setIsListModalOpen(false);
+        return;
+      }
+      
+      if (itemExists && editingItemName.toLowerCase() !== trimmed.toLowerCase()) {
         alert('Este item já existe.');
         return;
       }
       const newItens = listItems.map(p => p === editingItemName ? trimmed : p);
       await updateListInSupabase(newItens);
     } else {
-      if (listItems.includes(trimmed)) {
+      if (itemExists) {
         alert('Este item já existe.');
         return;
       }
       await updateListInSupabase([...listItems, trimmed]);
     }
+    
+    setIsListModalOpen(false);
+    setEditingItemName(null);
   };
 
   const handleCreateItem = () => {
@@ -127,7 +141,7 @@ export const SettingsPage = () => {
   };
 
   const handleDeleteItem = async (itemName: string) => {
-    if (!confirm(`Deseja excluir "${itemName}"?`)) return;
+    setConfirmDelete(null);
     const newItens = listItems.filter(p => p !== itemName);
     await updateListInSupabase(newItens);
   };
@@ -152,13 +166,12 @@ export const SettingsPage = () => {
     }
   }, [activeTab]);
 
-  const handleDeleteClient = async (id: string, name: string) => {
-    if (!confirm(`Tem certeza que deseja excluir o cliente "${name}"? Essa ação não pode ser desfeita e projetos associados não devem existir.`)) return;
-
+  const handleDeleteClient = async (id: string) => {
     try {
       const { error } = await supabase.from('Clientes').delete().eq('id', id);
       if (error) throw error;
       setClients(clients.filter(c => c.id !== id));
+      setConfirmDelete(null);
     } catch (err) {
       console.error('Erro ao excluir cliente:', err);
       alert('Erro ao excluir cliente.');
@@ -244,19 +257,53 @@ export const SettingsPage = () => {
                           <p className="text-sm text-slate-500 dark:text-slate-400">{item.description}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button 
-                          onClick={() => handleEditItem(item.name)}
-                          className="p-2 text-slate-400 hover:text-indigo-600 transition-colors"
-                        >
-                          <Edit2 size={18} />
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteItem(item.name)}
-                          className="p-2 text-slate-400 hover:text-red-600 transition-colors"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                      <div className="flex items-center gap-2">
+                        <AnimatePresence mode="wait">
+                          {confirmDelete === item.id ? (
+                            <motion.div
+                              key="confirm"
+                              initial={{ opacity: 0, x: 10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              exit={{ opacity: 0, x: 10 }}
+                              className="flex items-center gap-2"
+                            >
+                              <span className="text-[10px] font-black uppercase text-red-600 mr-2">Tem certeza?</span>
+                              <button
+                                onClick={() => handleDeleteItem(item.name)}
+                                className="px-3 py-1 bg-red-600 text-white rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-colors"
+                              >
+                                Sim
+                              </button>
+                              <button
+                                onClick={() => setConfirmDelete(null)}
+                                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                              >
+                                Não
+                              </button>
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              key="actions"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <button 
+                                onClick={() => handleEditItem(item.name)}
+                                className="p-2 text-slate-400 hover:text-indigo-600 transition-colors"
+                              >
+                                <Edit2 size={18} />
+                              </button>
+                              <button 
+                                onClick={() => setConfirmDelete(item.id)}
+                                className="p-2 text-slate-400 hover:text-red-600 transition-colors"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </div>
                     </div>
                   ))}
@@ -279,19 +326,52 @@ export const SettingsPage = () => {
                           <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center text-indigo-600 shadow-sm border border-slate-100 dark:border-slate-700">
                             <Building2 size={24} />
                           </div>
-                          <div className="flex items-center gap-1">
-                            <button 
-                              onClick={() => { setEditingClient(client); setIsClientModalOpen(true); }}
-                              className="p-1.5 text-slate-400 hover:text-indigo-600 transition-colors"
-                            >
-                              <Edit2 size={16} />
-                            </button>
-                            <button 
-                              onClick={() => handleDeleteClient(client.id, client.nome)}
-                              className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
-                            >
-                              <Trash2 size={16} />
-                            </button>
+                          <div className="flex items-center gap-1 min-h-[32px]">
+                            <AnimatePresence mode="wait">
+                              {confirmDelete === client.id ? (
+                                <motion.div
+                                  key="confirm"
+                                  initial={{ opacity: 0, x: 5 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  exit={{ opacity: 0, x: 5 }}
+                                  className="flex items-center gap-1"
+                                >
+                                  <button
+                                    onClick={() => handleDeleteClient(client.id)}
+                                    className="px-2 py-1 bg-red-600 text-white rounded text-[10px] font-black uppercase tracking-tighter hover:bg-red-700"
+                                  >
+                                    Sim
+                                  </button>
+                                  <button
+                                    onClick={() => setConfirmDelete(null)}
+                                    className="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 rounded text-[10px] font-black uppercase tracking-tighter"
+                                  >
+                                    Não
+                                  </button>
+                                </motion.div>
+                              ) : (
+                                <motion.div
+                                  key="actions"
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{ opacity: 0 }}
+                                  className="flex items-center gap-1"
+                                >
+                                  <button 
+                                    onClick={() => { setEditingClient(client); setIsClientModalOpen(true); }}
+                                    className="p-1.5 text-slate-400 hover:text-indigo-600 transition-colors"
+                                  >
+                                    <Edit2 size={16} />
+                                  </button>
+                                  <button 
+                                    onClick={() => setConfirmDelete(client.id)}
+                                    className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
                         </div>
                         <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-1">{client.nome}</h4>

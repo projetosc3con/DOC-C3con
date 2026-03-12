@@ -55,12 +55,6 @@ export const ProfilePage = () => {
       return;
     }
 
-    // Validar tamanho (máx 2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      setError('A imagem deve ter no máximo 2MB.');
-      return;
-    }
-
     try {
       setIsUploading(true);
       setError(null);
@@ -98,6 +92,14 @@ export const ProfilePage = () => {
         .eq('uuid', user.id);
 
       if (dbUpdateError) throw dbUpdateError;
+
+      // 5. Atualizar fotoUser em todos os comentários deste usuário
+      const { error: comentariosError } = await supabase
+        .from('Comentarios')
+        .update({ fotoUser: publicUrl })
+        .eq('emailUser', user.email);
+
+      if (comentariosError) throw comentariosError;
 
       setAvatarUrl(publicUrl);
       setShowSuccess(true);

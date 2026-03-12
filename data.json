@@ -1,0 +1,270 @@
+{
+    "Comentario": [
+        {
+            "comentario": "Cronograma detalhado foi atualizado conforme definições da fase atual.",
+            "idProjeto": 2,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Itens críticos de suprimentos foram sinalizados para acompanhamento semanal.",
+            "idProjeto": 2,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Projeto segue dentro da expectativa da fase e sem desvios relevantes até o momento.",
+            "idProjeto": 3,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Revisão de documentação técnica concluída com pequenos ajustes pendentes.",
+            "idProjeto": 3,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Dependências externas foram mapeadas para evitar impacto no prazo planejado.",
+            "idProjeto": 4,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Avaliação de risco operacional registrada para monitoramento na próxima reunião.",
+            "idProjeto": 4,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Equipe técnica validou as premissas principais da solução proposta.",
+            "idProjeto": 5,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Próxima etapa depende apenas do fechamento da análise de interface entre disciplinas.",
+            "idProjeto": 5,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Atividades de campo seguem conforme planejamento aprovado na última semana.",
+            "idProjeto": 6,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Foram identificados pontos de atenção em integridade, já encaminhados para tratamento.",
+            "idProjeto": 6,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Plano de comunicação atualizado com os responsáveis pelas frentes do projeto.",
+            "idProjeto": 7,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Necessário consolidar pendências de engenharia antes da liberação final.",
+            "idProjeto": 7,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Mobilização inicial concluída sem ocorrências relevantes para o cronograma.",
+            "idProjeto": 8,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Área técnica iniciou verificação dos documentos emitidos na fase de iniciação.",
+            "idProjeto": 8,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Reunião de acompanhamento reforçou prioridade alta para as entregas do mês.",
+            "idProjeto": 9,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Especificações dos equipamentos principais estão em consolidação técnica.",
+            "idProjeto": 9,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Projeto mantém aderência ao baseline aprovado para prazo e escopo.",
+            "idProjeto": 10,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Interfaces operacionais com unidades adjacentes foram registradas para revisão.",
+            "idProjeto": 10,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Status geral do projeto permanece positivo com bom avanço nas frentes abertas.",
+            "idProjeto": 11,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Análise técnica dos pacotes recebidos segue em curso pela engenharia.",
+            "idProjeto": 11,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Marcos intermediários revisados para refletir o avanço real da equipe técnica.",
+            "idProjeto": 12,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Foi solicitada complementação documental antes da próxima aprovação interna.",
+            "idProjeto": 12,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Projeto entrou em ciclo de acompanhamento reforçado por conta da prioridade definida.",
+            "idProjeto": 13,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Coordenação registrou pendências de integração entre contratos e entregas técnicas.",
+            "idProjeto": 13,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Escopo permanece estável e sem necessidade de revisão extraordinária nesta etapa.",
+            "idProjeto": 14,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Engenharia apontou necessidade de checagem adicional em documentos críticos.",
+            "idProjeto": 14,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Obra apresentou avanço satisfatório e sem impedimentos relevantes no período.",
+            "idProjeto": 15,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Verificações de campo confirmaram aderência às premissas técnicas planejadas.",
+            "idProjeto": 15,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Fase atual demanda acompanhamento próximo de fornecedores e aprovações.",
+            "idProjeto": 16,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Premissas de medição e integração foram consolidadas pela equipe técnica.",
+            "idProjeto": 16,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Projeto permanece em preparação com cronograma sendo refinado pela coordenação.",
+            "idProjeto": 17,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Análise de ganhos operacionais foi iniciada para suportar a priorização do projeto.",
+            "idProjeto": 17,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Abertura do projeto formalizada com alinhamento entre as áreas participantes.",
+            "idProjeto": 18,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Coordenação registrou necessidades iniciais de interface e mobilização.",
+            "idProjeto": 18,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Pacotes principais seguem em contratação conforme estratégia definida.",
+            "idProjeto": 19,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Engenharia revisou as capacidades previstas e não identificou inconsistências relevantes.",
+            "idProjeto": 19,
+            "nomeUser": "Gabriel",
+            "emailUser": "gabriel@engenharia.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Projeto classificado como prioritário para acompanhamento executivo quinzenal.",
+            "idProjeto": 20,
+            "nomeUser": "Marcos",
+            "emailUser": "marcos@gestor.com",
+            "fotoUser": ""
+        },
+        {
+            "comentario": "Coordenação apontou necessidade de consolidar aprovações antes do avanço de fase.",
+            "idProjeto": 20,
+            "nomeUser": "Leticia",
+            "emailUser": "leticia@coordenacao.com",
+            "fotoUser": ""
+        }
+    ]
+}
