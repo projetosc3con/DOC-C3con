@@ -75,9 +75,9 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="flex flex-col h-[600px] bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+            className="flex flex-col h-[600px] bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden"
         >
-            <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
+            <div className="p-4 border-b border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <MessageSquare size={18} className="text-indigo-600" />
                     <h3 className="font-bold text-sm">Histórico do Projeto</h3>
@@ -85,14 +85,14 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 transition-all">
+            <div className="p-4 border-b border-slate-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 transition-all">
                 <form onSubmit={handleSendMessage} className="space-y-3">
                     <div className="relative group">
                         <textarea
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
                             placeholder="Adicione um comentário importante sobre este projeto..."
-                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all resize-none min-h-[80px] max-h-[150px] text-slate-900 dark:text-slate-100"
+                            className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all resize-none min-h-[80px] max-h-[150px] text-slate-900 dark:text-slate-100"
                         />
                     </div>
                     <div className="flex justify-between items-center">
@@ -112,7 +112,7 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
             </div>
 
             {/* Chat List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar bg-slate-50/20 dark:bg-slate-900/10">
+            <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar bg-slate-50/20 dark:bg-zinc-900/10">
                 {isLoading ? (
                     <div className="h-full flex flex-col items-center justify-center space-y-2">
                         <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
@@ -132,7 +132,7 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
                                 <img
                                     src={comment.fotoUser || `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.nomeUser)}&background=6366f1&color=fff`}
                                     alt={comment.nomeUser}
-                                    className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 shadow-sm object-cover"
+                                    className="w-8 h-8 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm object-cover"
                                 />
                                 <div className={cn(
                                     "flex flex-col max-w-[85%]",
@@ -157,7 +157,7 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
                                         "p-3 rounded-2xl text-sm leading-relaxed shadow-sm whitespace-pre-wrap break-words",
                                         isMe
                                             ? "bg-indigo-600 text-white rounded-tr-none"
-                                            : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-tl-none"
+                                            : "bg-white dark:bg-zinc-800 border border-slate-100 dark:border-zinc-700 text-slate-700 dark:text-slate-300 rounded-tl-none"
                                     )}>
                                         {comment.comentario}
                                     </div>
@@ -167,7 +167,7 @@ export const ProjectComments = ({ idProjeto }: ProjectCommentsProps) => {
                     })
                 ) : (
                     <div className="h-full flex flex-col items-center justify-center text-center p-8">
-                        <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-300 dark:text-slate-600 mb-4 animate-bounce">
+                        <div className="w-16 h-16 bg-slate-100 dark:bg-zinc-800 rounded-full flex items-center justify-center text-slate-300 dark:text-slate-600 mb-4 animate-bounce">
                             <MessageSquare size={32} />
                         </div>
                         <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-1">Inicie a conversa</h4>

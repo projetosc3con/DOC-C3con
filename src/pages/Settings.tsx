@@ -200,7 +200,7 @@ export const SettingsPage = () => {
 
       <div className="p-4 sm:p-8 space-y-6">
         {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 p-1 bg-slate-100 dark:bg-slate-800/50 rounded-xl w-fit">
+        <div className="flex flex-wrap gap-2 p-1 bg-slate-100 dark:bg-zinc-800/50 rounded-xl w-fit">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -208,7 +208,7 @@ export const SettingsPage = () => {
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all",
                 activeTab === tab.id
-                  ? "bg-white dark:bg-slate-900 text-indigo-600 shadow-sm"
+                  ? "bg-white dark:bg-zinc-900 text-indigo-600 shadow-sm"
                   : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
               )}
             >
@@ -219,14 +219,14 @@ export const SettingsPage = () => {
         </div>
 
         {/* Tab Content */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
                 type="text"
                 placeholder={`Buscar ${tabs.find(t => t.id === activeTab)?.label.toLowerCase()}...`}
-                className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
               />
             </div>
             <button
@@ -246,10 +246,10 @@ export const SettingsPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="divide-y divide-slate-100 dark:divide-slate-800"
+                  className="divide-y divide-slate-100 dark:divide-zinc-800"
                 >
                   {mappedItems.map((item) => (
-                    <div key={item.id} className="p-4 sm:p-6 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+                    <div key={item.id} className="p-4 sm:p-6 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-zinc-800/30 transition-colors group">
                       <div className="flex items-center gap-4">
                         <div className={cn("w-3 h-12 rounded-full", item.color)} />
                         <div>
@@ -276,7 +276,7 @@ export const SettingsPage = () => {
                               </button>
                               <button
                                 onClick={() => setConfirmDelete(null)}
-                                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                className="px-3 py-1 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
                               >
                                 Não
                               </button>
@@ -321,9 +321,9 @@ export const SettingsPage = () => {
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6"
                 >
                     {clients.map((client) => (
-                      <div key={client.id} className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-600/50 transition-all group">
+                      <div key={client.id} className="bg-slate-50 dark:bg-zinc-800/50 p-6 rounded-xl border border-slate-200 dark:border-zinc-700 hover:border-indigo-600/50 transition-all group">
                         <div className="flex items-start justify-between mb-4">
-                          <div className="w-12 h-12 bg-white dark:bg-slate-800 rounded-lg flex items-center justify-center text-indigo-600 shadow-sm border border-slate-100 dark:border-slate-700">
+                          <div className="w-12 h-12 bg-white dark:bg-zinc-800 rounded-lg flex items-center justify-center text-indigo-600 shadow-sm border border-slate-100 dark:border-zinc-700">
                             <Building2 size={24} />
                           </div>
                           <div className="flex items-center gap-1 min-h-[32px]">
@@ -344,7 +344,7 @@ export const SettingsPage = () => {
                                   </button>
                                   <button
                                     onClick={() => setConfirmDelete(null)}
-                                    className="px-2 py-1 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 rounded text-[10px] font-black uppercase tracking-tighter"
+                                    className="px-2 py-1 bg-slate-200 dark:bg-zinc-700 text-slate-600 dark:text-slate-400 rounded text-[10px] font-black uppercase tracking-tighter"
                                   >
                                     Não
                                   </button>
@@ -388,7 +388,7 @@ export const SettingsPage = () => {
                           </div>
                         </div>
 
-                        <button className="mt-6 w-full py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+                        <button className="mt-6 w-full py-2 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2">
                           Ver Projetos
                           <ChevronRight size={14} />
                         </button>

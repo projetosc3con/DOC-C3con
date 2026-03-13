@@ -199,7 +199,7 @@ export const ProfilePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left: Avatar and Basic Info */}
           <div className="md:col-span-1 space-y-6">
-            <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm text-center">
+            <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm text-center">
               <div className="relative inline-block mb-4 group">
                 <div className="relative w-32 h-32 mx-auto">
                   <img
@@ -236,7 +236,7 @@ export const ProfilePage = () => {
               <p className="text-xs text-slate-500 mt-1">ID: {user?.id.substring(0, 8)}...</p>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
               <h4 className="text-xs font-bold text-slate-400 uppercase mb-4">Estatísticas</h4>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
@@ -253,7 +253,7 @@ export const ProfilePage = () => {
 
           {/* Right: Forms */}
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
               <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
                 <User size={20} className="text-indigo-600" />
                 Informações Pessoais
@@ -270,7 +270,7 @@ export const ProfilePage = () => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                         placeholder="Seu nome"
                       />
                     </div>
@@ -283,13 +283,13 @@ export const ProfilePage = () => {
                         type="email"
                         value={email}
                         disabled
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg outline-none text-slate-500 cursor-not-allowed"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg outline-none text-slate-500 cursor-not-allowed"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="pt-6 border-t border-slate-100 dark:border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-4">
                   <p className="text-xs text-slate-500 max-w-xs text-center sm:text-left">
                     Suas informações são armazenadas de forma segura e usadas para identificação nos projetos.
                   </p>
@@ -306,7 +306,7 @@ export const ProfilePage = () => {
             </div>
 
             {/* Security Section */}
-            <div className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
               <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
                 <Lock size={20} className="text-indigo-600" />
                 Segurança e Senha
@@ -330,7 +330,7 @@ export const ProfilePage = () => {
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                       placeholder="Min. 6 caracteres"
                       required
                     />
@@ -341,17 +341,17 @@ export const ProfilePage = () => {
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                       placeholder="Repita a nova senha"
                       required
                     />
                   </div>
                 </div>
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+                <div className="pt-6 border-t border-slate-100 dark:border-zinc-800 flex justify-end">
                   <button
                     type="submit"
                     disabled={isChangingPassword}
-                    className="px-5 py-2.5 bg-slate-800 text-white font-semibold text-sm rounded-lg hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="px-5 py-2.5 bg-slate-800 text-white font-semibold text-sm rounded-lg hover:bg-slate-900 dark:bg-zinc-700 dark:hover:bg-zinc-600 shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {isChangingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock size={16} />}
                     {isChangingPassword ? 'Alterando...' : 'Alterar Senha'}

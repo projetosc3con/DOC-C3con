@@ -6,7 +6,7 @@ export const PHASE_COLORS = [
   "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
   "bg-violet-100 text-violet-700 dark:bg-violet-900/40 dark:text-violet-300",
   "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300",
-  "bg-slate-100 text-slate-700 dark:bg-slate-900/40 dark:text-slate-300"
+  "bg-slate-100 text-slate-700 dark:bg-zinc-900/40 dark:text-slate-300"
 ];
 
 export const PHASE_DOT_COLORS = [

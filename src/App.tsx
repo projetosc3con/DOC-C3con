@@ -16,17 +16,19 @@ import { NewProjectPage } from './pages/NewProject';
 import { ProjectTypesPage } from './pages/ProjectTypes';
 import { NewProjectTypePage } from './pages/NewProjectType';
 
+import { LandingPage } from './pages/Landing';
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rota pública */}
+        {/* Rotas públicas */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
 
         {/* Rotas protegidas — exigem autenticação */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="projects/new" element={<NewProjectPage />} />
@@ -42,8 +44,6 @@ export default function App() {
           </Route>
         </Route>
 
-        {/* Raiz redireciona para login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

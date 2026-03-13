@@ -17,7 +17,7 @@ export const Layout = () => {
   const needsPasswordSetup = user?.user_metadata?.needsPasswordSetup;
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex h-screen bg-slate-50 dark:bg-zinc-950">
       {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -41,9 +41,9 @@ export const Layout = () => {
 
       <main className="flex-1 flex flex-col min-w-0 h-full relative z-10">
         {/* Mobile Header Toggle (only visible on small screens) */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-slate-100 dark:border-slate-800">
+            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-slate-100 dark:border-zinc-800">
               <img src={logoImg} alt="Logo" className="w-full h-full object-contain" />
             </div>
             <div>

@@ -134,7 +134,7 @@ export const ProjectDetailsPage = () => {
           {/* Left Column: Main Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tabs */}
-            <div className="flex border-b border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar">
+            <div className="flex border-b border-slate-200 dark:border-zinc-800 overflow-x-auto no-scrollbar">
               {[
                 { id: 'info', label: 'Geral' },
                 { id: 'milestones', label: 'Marcos' },
@@ -199,8 +199,8 @@ export const ProjectDetailsPage = () => {
 
           {/* Right Column: Sidebar Stats */}
           <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-zinc-800 rounded-xl border border-slate-100 dark:border-zinc-700">
                 <div className="flex items-center gap-2">
                   <div className={cn(
                     "w-3 h-3 rounded-full shadow-sm",
@@ -261,7 +261,7 @@ export const ProjectDetailsPage = () => {
               </div>
 
               <div className="space-y-6">
-                <div className="pt-4 mt-2 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-4 mt-2 border-t border-slate-100 dark:border-zinc-800">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-[10px] text-slate-400 font-black font-semibold tracking-widest mb-2">Fase do Projeto</span>
                   </div>
@@ -274,7 +274,7 @@ export const ProjectDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-4 border-t border-slate-100 dark:border-zinc-800">
                   <p className="text-[10px] text-slate-400 font-black font-semibold tracking-widest mb-2">Gestor do projeto</p>
                   <div className="flex items-center gap-3">
                     <img

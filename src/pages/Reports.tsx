@@ -72,18 +72,18 @@ export const ReportsPage = () => {
       
       <div className="p-4 sm:p-8 space-y-8">
         {/* Quick Filters */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-4 items-center">
+        <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-wrap gap-4 items-center">
           <div className="flex items-center gap-2 text-sm font-bold text-slate-500 mr-4">
             <Filter size={18} />
             Filtros Globais:
           </div>
-          <select className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
+          <select className="bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
             <option>Este Mês</option>
             <option>Último Trimestre</option>
             <option>Ano Atual</option>
             <option>Personalizado</option>
           </select>
-          <select className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
+          <select className="bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
             <option>Todos os Departamentos</option>
             <option>TI</option>
             <option>Marketing</option>
@@ -100,7 +100,7 @@ export const ReportsPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-indigo-600/5 transition-all group cursor-pointer overflow-hidden"
+              className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:shadow-indigo-600/5 transition-all group cursor-pointer overflow-hidden"
             >
               <div className="p-6">
                 <div className={`${report.color} w-12 h-12 rounded-xl flex items-center justify-center text-white mb-6 shadow-lg shadow-current/20 group-hover:scale-110 transition-transform`}>
@@ -114,7 +114,7 @@ export const ReportsPage = () => {
                   {report.description}
                 </p>
                 
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800">
                   <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
                     {report.stats}
                   </span>

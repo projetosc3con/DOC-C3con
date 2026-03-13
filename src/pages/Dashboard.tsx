@@ -146,16 +146,16 @@ export const DashboardPage = () => {
           <button
             onClick={() => setIsFilterOpen(true)}
             className={cn(
-              "flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative bg-white dark:bg-slate-900",
+              "flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative bg-white dark:bg-zinc-900",
               activeFiltersCount > 0
                 ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300"
-                : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-800"
             )}
           >
             <Filter size={18} />
             Filtros
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-in zoom-in duration-300">
+              <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-zinc-900 shadow-sm animate-in zoom-in duration-300">
                 {activeFiltersCount}
               </span>
             )}
@@ -184,7 +184,7 @@ export const DashboardPage = () => {
               : (percentage < 85 ? "text-amber-500" : "text-red-500");
 
             return (
-              <div key={idx} className="bg-white dark:bg-slate-900 p-6 pb-28 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center hover:shadow-lg transition-all group">
+              <div key={idx} className="bg-white dark:bg-zinc-900 p-6 pb-28 rounded-3xl border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col items-center hover:shadow-lg transition-all group">
                 <h3 className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-6 flex flex-col items-center gap-1 text-center">
                   <span className="text-slate-800 dark:text-slate-100 text-sm">{kpi.title}</span>
                 </h3>
@@ -213,9 +213,9 @@ export const DashboardPage = () => {
                   </div>
 
                   {/* Base labels */}
-                  <div className="absolute bottom-2 left-0 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded-lg">0%</div>
-                  <div className="absolute -top-4 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-2.5 py-0.5 rounded-full shadow-sm border border-slate-100 dark:border-slate-800">100%</div>
-                  <div className="absolute bottom-2 right-0 text-[10px] font-black text-slate-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded-lg">200%</div>
+                  <div className="absolute bottom-2 left-0 text-[10px] font-black text-slate-400 bg-white dark:bg-zinc-900 px-1.5 py-0.5 rounded-lg">0%</div>
+                  <div className="absolute -top-4 text-[10px] font-black text-slate-400 bg-white dark:bg-zinc-900 px-2.5 py-0.5 rounded-full shadow-sm border border-slate-100 dark:border-zinc-800">100%</div>
+                  <div className="absolute bottom-2 right-0 text-[10px] font-black text-slate-400 bg-white dark:bg-zinc-900 px-1.5 py-0.5 rounded-lg">200%</div>
 
                   {/* Needle */}
                   <div
@@ -223,9 +223,9 @@ export const DashboardPage = () => {
                     style={{ height: '95px', transform: `translateX(-50%) rotate(${rotationDeg}deg)` }}
                   >
                     {/* Ponteiro */}
-                    <div className="w-[4px] h-full rounded-t-full bg-slate-800 dark:bg-slate-300 shadow-[0_0_10px_rgba(0,0,0,0.2)] mx-auto" />
+                    <div className="w-[4px] h-full rounded-t-full bg-slate-800 dark:bg-zinc-300 shadow-[0_0_10px_rgba(0,0,0,0.2)] mx-auto" />
                     {/* Pivô */}
-                    <div className="w-6 h-6 rounded-full bg-slate-900 dark:bg-white border-[5px] border-white dark:border-slate-800 absolute -bottom-3 -left-[10px] shadow-lg" />
+                    <div className="w-6 h-6 rounded-full bg-slate-900 dark:bg-white border-[5px] border-white dark:border-zinc-800 absolute -bottom-3 -left-[10px] shadow-lg" />
                   </div>
 
                   {/* Text value underneath */}
@@ -233,7 +233,7 @@ export const DashboardPage = () => {
                     <span className={cn("text-3xl font-black tracking-tighter pt-2", textColor)}>
                       {percentage.toFixed(1)}%
                     </span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-2 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-2 px-3 py-1.5 rounded-full bg-slate-50 dark:bg-zinc-800 border border-slate-100 dark:border-zinc-700">
                       {isHealthy ? '✅ Dentro da Meta' : '⚠️ Fora do Indicador'}
                     </span>
                   </div>
@@ -246,13 +246,13 @@ export const DashboardPage = () => {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Main Chart: Performance Financeira */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="font-bold text-lg">Performance Financeira</h3>
                 <p className="text-xs text-slate-500">Comparativo entre Orçamento Planejado vs Realizado (K R$)</p>
               </div>
-              <select className="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-xs font-bold p-2 outline-none">
+              <select className="bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-xs font-bold p-2 outline-none">
                 <option>Últimos 6 meses</option>
                 <option>Último ano</option>
               </select>
@@ -289,13 +289,13 @@ export const DashboardPage = () => {
           </div>
 
           {/* Secondary Chart: Avanço Físico */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="font-bold text-lg">Avanço Físico Geral</h3>
                 <p className="text-xs text-slate-500">Comparativo entre Avanço Planejado vs Realizado (%)</p>
               </div>
-              <select className="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-xs font-bold p-2 outline-none">
+              <select className="bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-xs font-bold p-2 outline-none">
                 <option>Últimos 6 meses</option>
                 <option>Último ano</option>
               </select>
@@ -332,7 +332,7 @@ export const DashboardPage = () => {
           </div>
 
           {/* Ranking Panel: Financeiro (Melhores / Piores) */}
-          <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
+          <div className="lg:col-span-2 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col">
             <div className="mb-6">
               <h3 className="font-bold text-lg">Ranking Financeiro de Projetos</h3>
               <p className="text-xs text-slate-500">Top 5 Superávit vs Top 5 Déficit</p>
@@ -413,17 +413,17 @@ export const DashboardPage = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl z-50 overflow-y-auto"
+              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-zinc-900 shadow-2xl z-50 overflow-y-auto"
             >
               <div className="p-6 space-y-8">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4">
                   <div className="flex items-center gap-2">
                     <Filter className="text-indigo-600" size={20} />
                     <h2 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Filtros Avançados</h2>
                   </div>
                   <button
                     onClick={() => setIsFilterOpen(false)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                   >
                     <X size={20} className="text-slate-400" />
                   </button>
@@ -436,7 +436,7 @@ export const DashboardPage = () => {
                     <select
                       value={filters.tipo}
                       onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os tipos</option>
                       {tiposProjeto.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
@@ -449,7 +449,7 @@ export const DashboardPage = () => {
                     <select
                       value={filters.fase}
                       onChange={(e) => setFilters({ ...filters, fase: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as fases</option>
                       {phasesList.map(f => <option key={f} value={f}>{f}</option>)}
@@ -462,7 +462,7 @@ export const DashboardPage = () => {
                     <select
                       value={filters.classificacao}
                       onChange={(e) => setFilters({ ...filters, classificacao: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as classificações</option>
                       {classificacoes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -475,7 +475,7 @@ export const DashboardPage = () => {
                     <select
                       value={filters.contratacao}
                       onChange={(e) => setFilters({ ...filters, contratacao: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as contratações</option>
                       {contratacoes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -488,7 +488,7 @@ export const DashboardPage = () => {
                     <select
                       value={filters.prioridade}
                       onChange={(e) => setFilters({ ...filters, prioridade: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as prioridades</option>
                       <option value="Baixa">Baixa</option>
@@ -503,7 +503,7 @@ export const DashboardPage = () => {
                     <select
                       value={filters.responsavel}
                       onChange={(e) => setFilters({ ...filters, responsavel: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os responsáveis</option>
                       {usuarios.map(u => <option key={u.uuid} value={u.uuid}>{u.fullName}</option>)}
@@ -512,10 +512,10 @@ export const DashboardPage = () => {
 
                 </div>
 
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+                <div className="pt-6 border-t border-slate-100 dark:border-zinc-800 flex gap-3">
                   <button
                     onClick={clearFilters}
-                    className="flex-1 px-4 py-2 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-slate-300 rounded-lg text-sm font-bold hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
                   >
                     <RotateCcw size={16} />
                     Limpar

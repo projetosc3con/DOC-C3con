@@ -42,7 +42,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
   };
 
   return (
-    <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full overflow-y-auto">
+    <aside className="w-64 bg-white dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 flex flex-col h-full overflow-y-auto">
       <div className="p-6 flex items-center justify-between">
         {/* Logo clicável → vai para o dashboard */}
         <NavLink
@@ -60,7 +60,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
         </NavLink>
 
         {onClose && (
-          <button onClick={onClose} className="lg:hidden p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+          <button onClick={onClose} className="lg:hidden p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg">
             <X size={20} />
           </button>
         )}
@@ -76,7 +76,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
               "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium",
               isActive
                 ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
             )}
           >
             <item.icon size={18} />
@@ -85,7 +85,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
         ))}
 
         {isAdmin && (
-          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 space-y-1">
+          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-zinc-800 space-y-1">
             <p className="px-3 text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">
               Configurações
             </p>
@@ -96,7 +96,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
                 "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium",
                 isActive
                   ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
               )}
             >
               <Layers size={18} />
@@ -109,7 +109,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
                 "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium",
                 isActive
                   ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800"
               )}
             >
               <List size={18} />
@@ -119,7 +119,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
         )}
       </nav>
 
-      <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+      <div className="p-4 border-t border-slate-200 dark:border-zinc-800">
         <NavLink
           to="/projects/new"
           onClick={onClose}
@@ -134,7 +134,7 @@ export const Sidebar = ({ onClose }: SidebarProps) => {
           <NavLink
             to="/profile"
             onClick={onClose}
-            className="flex-1 flex items-center gap-3 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors group min-w-0"
+            className="flex-1 flex items-center gap-3 p-2 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl transition-colors group min-w-0"
           >
             <img
               src={user?.user_metadata?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.user_metadata?.fullName || user?.email?.split('@')[0] || 'U')}&background=6366f1&color=fff`}

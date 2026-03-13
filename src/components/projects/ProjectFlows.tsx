@@ -240,8 +240,8 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
             </div>
 
             {flows.length === 0 ? (
-                <div className="bg-slate-50 dark:bg-slate-800/40 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center">
-                    <div className="w-16 h-16 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100 dark:border-slate-700 text-slate-300">
+                <div className="bg-slate-50 dark:bg-zinc-800/40 border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-2xl p-12 text-center">
+                    <div className="w-16 h-16 bg-white dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100 dark:border-zinc-700 text-slate-300">
                         <GitBranch size={32} />
                     </div>
                     <h4 className="text-slate-900 dark:text-slate-100 font-bold mb-1">Nenhum fluxo encontrado</h4>
@@ -261,7 +261,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                 layout
                                 initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all group overflow-hidden"
+                                className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-sm hover:shadow-md transition-all group overflow-hidden"
                             >
                                 <div className="p-6">
                                     <div className="flex justify-between items-start mb-6">
@@ -278,7 +278,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                                 <div className="flex items-center gap-3 mt-1">
                                                     <p className="text-[10px] text-slate-500 line-clamp-1 max-w-xs">{flow.descricao}</p>
                                                     {flow.dataLimite && (
-                                                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded">
+                                                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 bg-slate-50 dark:bg-zinc-800 px-2 py-0.5 rounded">
                                                             <Calendar size={12} />
                                                             {new Date(flow.dataLimite).toLocaleDateString()}
                                                         </div>
@@ -300,7 +300,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
 
                                     {/* Timeline Visual UX */}
                                     <div className="relative mb-8 pt-4">
-                                        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-100 dark:bg-slate-800 -translate-y-1/2 rounded-full overflow-hidden">
+                                        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-100 dark:bg-zinc-800 -translate-y-1/2 rounded-full overflow-hidden">
                                             <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} className={cn("h-full transition-all duration-500", 
                                                 flow.status === 'Aprovado' ? 'bg-emerald-500' : flow.status === 'Reprovado' ? 'bg-red-500' : 'bg-indigo-600')} />
                                         </div>
@@ -314,7 +314,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                                 return (
                                                     <div key={idx} className="flex flex-col items-center gap-2 relative z-10">
                                                         <div className={cn("w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300", 
-                                                            isCompleted ? "bg-white dark:bg-slate-900 border-indigo-600 text-indigo-600" : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-800 text-slate-400")}>
+                                                            isCompleted ? "bg-white dark:bg-zinc-900 border-indigo-600 text-indigo-600" : "bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-800 text-slate-400")}>
                                                             <step.icon size={14} />
                                                         </div>
                                                         <span className={cn("text-[9px] font-black uppercase tracking-tight", isCompleted ? "text-indigo-600" : "text-slate-400")}>{step.label}</span>
@@ -325,7 +325,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                     </div>
 
                                     {/* Assignee / Info Section */}
-                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-6 border-t border-slate-100 dark:border-slate-800">
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pt-6 border-t border-slate-100 dark:border-zinc-800">
                                         <div className="flex items-center gap-3">
                                             <div className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600"><User size={16} /></div>
                                             <div>
@@ -341,7 +341,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400"><Flag size={16} /></div>
+                                            <div className="w-9 h-9 rounded-lg bg-slate-50 dark:bg-zinc-800 flex items-center justify-center text-slate-400"><Flag size={16} /></div>
                                             <div>
                                                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Marco Relacionado</p>
                                                 <p className="text-xs font-bold text-slate-700 dark:text-slate-200">{milestones.find(m => m.id === flow.idMarco)?.nome || '-'}</p>
@@ -358,10 +358,10 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                     </div>
 
                                     {/* Link & Phase Control */}
-                                    <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                                    <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 dark:bg-zinc-800/50 p-4 rounded-xl">
                                         <div className="flex-1 w-full flex items-center gap-4">
                                             {flow.urlAnexo ? (
-                                                <a href={flow.urlAnexo} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-indigo-600 hover:bg-white dark:hover:bg-slate-900 px-3 py-1.5 rounded-lg border border-indigo-100 dark:border-indigo-900/30 transition-all shadow-sm">
+                                                <a href={flow.urlAnexo} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-xs font-bold text-indigo-600 hover:bg-white dark:hover:bg-zinc-900 px-3 py-1.5 rounded-lg border border-indigo-100 dark:border-indigo-900/30 transition-all shadow-sm">
                                                     <Paperclip size={14} /> Visualizar Documento
                                                 </a>
                                             ) : (
@@ -425,33 +425,33 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                 {isModalOpen && (
                     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
-                        <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
-                            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50 font-black">
+                        <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="relative w-full max-w-xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
+                            <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-800/50 font-black">
                                 <h3 className="text-sm uppercase tracking-widest flex items-center gap-3">
                                     <GitBranch className="text-indigo-600" size={18} /> Novo Fluxo de Trabalho
                                 </h3>
-                                <button onClick={() => setIsModalOpen(false)} className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"><X size={20}/></button>
+                                <button onClick={() => setIsModalOpen(false)} className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg"><X size={20}/></button>
                             </div>
                             <form onSubmit={handleCreateFlow} className="p-6 space-y-6">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="col-span-2 space-y-1.5">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Título do Fluxo</label>
-                                        <input required type="text" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} />
+                                        <input required type="text" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.nome} onChange={e => setFormData({ ...formData, nome: e.target.value })} />
                                     </div>
                                     <div className="col-span-2 space-y-1.5">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Descrição</label>
-                                        <textarea rows={2} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600 resize-none" value={formData.descricao} onChange={e => setFormData({ ...formData, descricao: e.target.value })} />
+                                        <textarea rows={2} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600 resize-none" value={formData.descricao} onChange={e => setFormData({ ...formData, descricao: e.target.value })} />
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Marco PAI (Data Limite)</label>
-                                        <select required className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.idMarco} onChange={e => setFormData({ ...formData, idMarco: e.target.value })}>
+                                        <select required className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.idMarco} onChange={e => setFormData({ ...formData, idMarco: e.target.value })}>
                                             <option value="">Selecione um marco...</option>
                                             {milestones.map(m => <option key={m.id} value={m.id}>{m.nome}</option>)}
                                         </select>
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Fase após Aprovação</label>
-                                        <select className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.faseAoFim} onChange={e => setFormData({ ...formData, faseAoFim: e.target.value })}>
+                                        <select className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.faseAoFim} onChange={e => setFormData({ ...formData, faseAoFim: e.target.value })}>
                                             <option value="">Nenhuma alteração</option>
                                             <option value="Iniciação">Iniciação</option>
                                             <option value="Planejamento">Planejamento</option>
@@ -461,14 +461,14 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Responsável (Atribuído a)</label>
-                                        <select required className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.atribuidoA} onChange={e => setFormData({ ...formData, atribuidoA: e.target.value })}>
+                                        <select required className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.atribuidoA} onChange={e => setFormData({ ...formData, atribuidoA: e.target.value })}>
                                             <option value="">Selecione...</option>
                                             {users.map(u => <option key={u.uuid} value={u.uuid}>{u.fullName}</option>)}
                                         </select>
                                     </div>
                                     <div className="space-y-1.5">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Aprovador Final</label>
-                                        <select required className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.aprovador} onChange={e => setFormData({ ...formData, aprovador: e.target.value })}>
+                                        <select required className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-600" value={formData.aprovador} onChange={e => setFormData({ ...formData, aprovador: e.target.value })}>
                                             <option value="">Selecione...</option>
                                             {users.map(u => <option key={u.uuid} value={u.uuid}>{u.fullName}</option>)}
                                         </select>
@@ -479,7 +479,7 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                                     <label htmlFor="exigeAnexo" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">Exigir anexo obrigatório para solicitação de aprovação</label>
                                 </div>
                                 <div className="flex gap-3 pt-4">
-                                    <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl font-black text-[10px] uppercase tracking-widest">Cancelar</button>
+                                    <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 rounded-xl font-black text-[10px] uppercase tracking-widest">Cancelar</button>
                                     <button disabled={isSaving} className="flex-[2] py-3 bg-indigo-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-600/20">{isSaving ? 'Processando...' : 'Iniciar Fluxo'}</button>
                                 </div>
                             </form>
@@ -511,14 +511,14 @@ export const ProjectFlows = ({ projectId, responsavelId }: ProjectFlowsProps) =>
                 {deletingId && (
                     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setDeletingId(null)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-xs bg-white dark:bg-slate-900 rounded-2xl p-6 text-center border border-slate-200 dark:border-slate-800">
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-xs bg-white dark:bg-zinc-900 rounded-2xl p-6 text-center border border-slate-200 dark:border-zinc-800">
                             <div className="w-12 h-12 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Trash2 size={24} />
                             </div>
                             <h3 className="font-bold text-slate-900 dark:text-slate-50 mb-1 uppercase text-sm tracking-widest">Excluir Fluxo?</h3>
                             <p className="text-xs text-slate-500 mb-6 font-medium">Esta ação não pode ser desfeita. Deseja realmente remover este fluxo de aprovação?</p>
                             <div className="flex gap-3">
-                                <button onClick={() => setDeletingId(null)} className="flex-1 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl font-black text-[10px] uppercase tracking-widest">Manter</button>
+                                <button onClick={() => setDeletingId(null)} className="flex-1 py-2 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 rounded-xl font-black text-[10px] uppercase tracking-widest">Manter</button>
                                 <button onClick={confirmDelete} className="flex-1 py-2 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-600/20">Remover</button>
                             </div>
                         </motion.div>

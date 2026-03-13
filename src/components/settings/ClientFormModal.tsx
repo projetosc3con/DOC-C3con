@@ -90,15 +90,15 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+      <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-zinc-800">
           <h2 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-slate-100">
             <Building2 className="text-indigo-600" />
             {cliente ? 'Editar Cliente' : 'Novo Cliente'}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
           >
             <X size={20} />
           </button>
@@ -119,7 +119,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                   onChange={handleChange}
                   type="text"
                   placeholder="Nome da empresa"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -136,7 +136,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                   onChange={handleChange}
                   type="text"
                   placeholder="00.000.000/0001-00"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -151,7 +151,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                   onChange={handleChange}
                   type="email"
                   placeholder="contato@empresa.com"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -166,7 +166,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                   onChange={handleChange}
                   type="text"
                   placeholder="(00) 0000-0000"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                   onChange={handleChange}
                   type="text"
                   placeholder="Tecnologia, Logística..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
@@ -196,18 +196,18 @@ export const ClientFormModal: React.FC<ClientFormModalProps> = ({ isOpen, onClos
                   onChange={handleChange}
                   type="text"
                   placeholder="Nome do contato principal"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex justify-end gap-3 pt-6 border-t border-slate-100 dark:border-zinc-800">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50"
+              className="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>

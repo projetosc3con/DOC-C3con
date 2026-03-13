@@ -4,8 +4,8 @@ import { Home, Search, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 export const NotFoundPage = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950">
-      <header className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 py-4 lg:px-20">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-zinc-950">
+      <header className="flex items-center justify-between border-b border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-6 py-4 lg:px-20">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center p-2 bg-blue-600/10 rounded-lg text-blue-600">
             <ShieldCheck size={24} />
@@ -41,7 +41,7 @@ export const NotFoundPage = () => {
 
           <div className="relative flex justify-center items-center">
             <div className="absolute inset-0 bg-blue-600/10 rounded-full blur-3xl opacity-50 animate-pulse"></div>
-            <div className="relative z-10 w-full max-w-[450px] aspect-square bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center border border-slate-100 dark:border-slate-700">
+            <div className="relative z-10 w-full max-w-[450px] aspect-square bg-white dark:bg-zinc-800 rounded-2xl shadow-2xl p-8 flex flex-col items-center justify-center border border-slate-100 dark:border-zinc-700">
               <div className="relative mb-8">
                 <Search size={160} className="text-blue-600/20 absolute -top-12 -left-12 rotate-12" />
                 <div className="relative bg-blue-600/5 p-12 rounded-full border-4 border-dashed border-blue-600/20 flex items-center justify-center">

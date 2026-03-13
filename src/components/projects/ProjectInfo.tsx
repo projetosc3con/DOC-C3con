@@ -148,7 +148,7 @@ export const ProjectInfo = ({
                     { label: 'Contratação', value: hiringType, icon: Briefcase },
                     { label: 'Prioridade', value: priority, icon: BarChart3 }
                 ].map((item, idx) => (
-                    <div key={idx} className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-1">
+                    <div key={idx} className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-col gap-1">
                         <div className="flex items-center gap-2 text-slate-400 mb-1">
                             <item.icon size={14} className="text-indigo-600" />
                             <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
@@ -161,7 +161,7 @@ export const ProjectInfo = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm col-span-1 md:col-span-2">
+                <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm col-span-1 md:col-span-2">
                     <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-slate-400">
                         <FileText size={16} className="text-indigo-600" />
                         Descrição do Projeto
@@ -171,7 +171,7 @@ export const ProjectInfo = ({
                     </p>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm">
                     <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-slate-400">
                         <Target size={18} className="text-indigo-600" />
                         Objetivo
@@ -181,7 +181,7 @@ export const ProjectInfo = ({
                     </p>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm">
                     <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-slate-400">
                         <Zap size={18} className="text-indigo-600" />
                         Escopo
@@ -191,7 +191,7 @@ export const ProjectInfo = ({
                     </p>
                 </div>
 
-                <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm">
                     <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 text-slate-400">
                         <AlertCircle size={18} className="text-indigo-600" />
                         Justificativa
@@ -227,9 +227,9 @@ export const ProjectInfo = ({
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
+                            className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800"
                         >
-                            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+                            <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-800/50">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
                                         <Edit size={20} />
@@ -242,7 +242,7 @@ export const ProjectInfo = ({
                                 <button
                                     onClick={() => setIsModalOpen(false)}
                                     disabled={isSaving}
-                                    className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                                    className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
                                 >
                                     <X size={20} />
                                 </button>
@@ -258,7 +258,7 @@ export const ProjectInfo = ({
                                         <textarea
                                             value={formData.description}
                                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
                                             placeholder="Descreva o propósito e contexto do projeto..."
                                         />
                                     </div>
@@ -271,7 +271,7 @@ export const ProjectInfo = ({
                                         <textarea
                                             value={formData.objective}
                                             onChange={(e) => setFormData({ ...formData, objective: e.target.value })}
-                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
                                             placeholder="Quais são os principais objetivos?"
                                         />
                                     </div>
@@ -284,7 +284,7 @@ export const ProjectInfo = ({
                                         <textarea
                                             value={formData.scope}
                                             onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
-                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
                                             placeholder="O que está incluído e o que não está?"
                                         />
                                     </div>
@@ -297,7 +297,7 @@ export const ProjectInfo = ({
                                         <textarea
                                             value={formData.justification}
                                             onChange={(e) => setFormData({ ...formData, justification: e.target.value })}
-                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
+                                            className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all min-h-[100px] text-slate-900 dark:text-slate-100"
                                             placeholder="Por que este projeto é necessário?"
                                         />
                                     </div>
@@ -311,7 +311,7 @@ export const ProjectInfo = ({
                                             <select
                                                 value={formData.classification}
                                                 onChange={(e) => setFormData({ ...formData, classification: e.target.value })}
-                                                className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all text-slate-900 dark:text-slate-100"
+                                                className="w-full px-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all text-slate-900 dark:text-slate-100"
                                             >
                                                 <option value="">Selecione...</option>
                                                 {classificacoes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -325,7 +325,7 @@ export const ProjectInfo = ({
                                             <select
                                                 value={formData.priority}
                                                 onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                                                className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all text-slate-900 dark:text-slate-100"
+                                                className="w-full px-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all text-slate-900 dark:text-slate-100"
                                             >
                                                 <option value="">Selecione...</option>
                                                 <option value="Baixa">Baixa</option>
@@ -341,7 +341,7 @@ export const ProjectInfo = ({
                                             <select
                                                 value={formData.hiringType}
                                                 onChange={(e) => setFormData({ ...formData, hiringType: e.target.value })}
-                                                className="w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all text-slate-900 dark:text-slate-100"
+                                                className="w-full px-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all text-slate-900 dark:text-slate-100"
                                             >
                                                 <option value="">Selecione...</option>
                                                 {contratacoes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -352,7 +352,7 @@ export const ProjectInfo = ({
                                                 <LayoutGrid size={14} className="text-indigo-600" />
                                                 Tipo (Imutável)
                                             </label>
-                                            <div className="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-sm text-slate-500 flex items-center gap-2">
+                                            <div className="w-full px-4 py-2 bg-slate-100 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700 rounded-xl text-sm text-slate-500 flex items-center gap-2">
                                                 <Lock size={12} />
                                                 {formData.projectType}
                                             </div>
@@ -367,12 +367,12 @@ export const ProjectInfo = ({
                                     </div>
                                 )}
 
-                                <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+                                <div className="pt-6 border-t border-slate-100 dark:border-zinc-800 flex justify-end gap-3">
                                     <button
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
                                         disabled={isSaving}
-                                        className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                                        className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                                     >
                                         Cancelar
                                     </button>

@@ -178,7 +178,7 @@ export const ProjectsPage = () => {
 
       <div className="p-4 sm:p-8 space-y-6 sm:space-y-8">
         {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all focus-within:shadow-md">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-all focus-within:shadow-md">
           <div className="relative w-full sm:w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={18} />
             <input
@@ -186,7 +186,7 @@ export const ProjectsPage = () => {
               placeholder="Buscar por ID ou descrição..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all placeholder:text-slate-400 font-medium"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all placeholder:text-slate-400 font-medium"
             />
           </div>
 
@@ -197,13 +197,13 @@ export const ProjectsPage = () => {
                 "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative",
                 activeFiltersCount > 0
                   ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300"
-                  : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-800"
               )}
             >
               <Filter size={18} />
               Filtros
               {activeFiltersCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-in zoom-in duration-300">
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-zinc-900 shadow-sm animate-in zoom-in duration-300">
                   {activeFiltersCount}
                 </span>
               )}
@@ -218,10 +218,10 @@ export const ProjectsPage = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden min-h-[400px]">
+        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-slate-200 dark:border-zinc-800 overflow-hidden min-h-[400px]">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-slate-50 dark:bg-zinc-800/50 border-b border-slate-200 dark:border-zinc-800">
                 <tr>
                   <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Descrição do projeto</th>
                   <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Classificação</th>
@@ -230,7 +230,7 @@ export const ProjectsPage = () => {
                   <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                 {isLoading ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-12 text-center">
@@ -258,7 +258,7 @@ export const ProjectsPage = () => {
                   return (
                     <tr
                       key={project.id}
-                      className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors cursor-pointer group"
+                      className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors cursor-pointer group"
                       onClick={() => navigate(`/projects/${project.id}`)}
                     >
                       <td className="px-6 py-4">
@@ -301,7 +301,7 @@ export const ProjectsPage = () => {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button className="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 dark:bg-slate-800 rounded-lg group-hover:bg-white dark:group-hover:bg-slate-700">
+                          <button className="p-2 text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 dark:bg-zinc-800 rounded-lg group-hover:bg-white dark:group-hover:bg-zinc-700">
                             <ChevronRight size={18} />
                           </button>
                         </div>
@@ -315,7 +315,7 @@ export const ProjectsPage = () => {
 
           {/* Pagination */}
           {!isLoading && totalCount > 0 && (
-            <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-4 bg-slate-50 dark:bg-zinc-800/50 border-t border-slate-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <span className="text-xs font-bold text-slate-500 tracking-widest">
                   Exibindo {projects.length} de {totalCount} projetos
@@ -326,7 +326,7 @@ export const ProjectsPage = () => {
                     setPageSize(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md text-[10px] font-slate-500 tracking-widest p-1 focus:ring-1 focus:ring-indigo-600 outline-none"
+                  className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-md text-[10px] font-slate-500 tracking-widest p-1 focus:ring-1 focus:ring-indigo-600 outline-none"
                 >
                   <option value={5}>5 por página</option>
                   <option value={10}>10 por página</option>
@@ -338,7 +338,7 @@ export const ProjectsPage = () => {
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(prev => prev - 1)}
-                  className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+                  className="p-2 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-lg text-slate-600 dark:text-slate-400 disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all shadow-sm"
                 >
                   <ChevronLeft size={16} />
                 </button>
@@ -351,7 +351,7 @@ export const ProjectsPage = () => {
                         "w-8 h-8 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all shadow-sm",
                         currentPage === i + 1
                           ? "bg-indigo-600 text-white"
-                          : "bg-white dark:bg-slate-900 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700"
+                          : "bg-white dark:bg-zinc-900 text-slate-500 hover:bg-slate-50 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-700"
                       )}
                     >
                       {i + 1}
@@ -361,7 +361,7 @@ export const ProjectsPage = () => {
                 <button
                   disabled={currentPage === Math.ceil(totalCount / pageSize)}
                   onClick={() => setCurrentPage(prev => prev + 1)}
-                  className="p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+                  className="p-2 bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 rounded-lg text-slate-600 dark:text-slate-400 disabled:opacity-30 hover:bg-slate-50 dark:hover:bg-zinc-800 transition-all shadow-sm"
                 >
                   <ChevronRightIcon size={16} />
                 </button>
@@ -385,17 +385,17 @@ export const ProjectsPage = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl z-50 overflow-y-auto"
+              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-zinc-900 shadow-2xl z-50 overflow-y-auto"
             >
               <div className="p-6 space-y-8">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4">
                   <div className="flex items-center gap-2">
                     <Filter className="text-indigo-600" size={20} />
                     <h2 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Filtros Avançados</h2>
                   </div>
                   <button
                     onClick={() => setIsFilterOpen(false)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                   >
                     <X size={20} className="text-slate-400" />
                   </button>
@@ -408,7 +408,7 @@ export const ProjectsPage = () => {
                     <select
                       value={filters.tipo}
                       onChange={(e) => setFilters({ ...filters, tipo: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os tipos</option>
                       {tiposProjeto.map(t => <option key={t.id} value={t.nome}>{t.nome}</option>)}
@@ -421,7 +421,7 @@ export const ProjectsPage = () => {
                     <select
                       value={filters.fase}
                       onChange={(e) => setFilters({ ...filters, fase: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as fases</option>
                       {phasesList.map(f => <option key={f} value={f}>{f}</option>)}
@@ -434,7 +434,7 @@ export const ProjectsPage = () => {
                     <select
                       value={filters.classificacao}
                       onChange={(e) => setFilters({ ...filters, classificacao: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as classificações</option>
                       {classificacoes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -447,7 +447,7 @@ export const ProjectsPage = () => {
                     <select
                       value={filters.contratacao}
                       onChange={(e) => setFilters({ ...filters, contratacao: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os tipos de contratação</option>
                       {contratacoes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -460,7 +460,7 @@ export const ProjectsPage = () => {
                     <select
                       value={filters.prioridade}
                       onChange={(e) => setFilters({ ...filters, prioridade: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todas as prioridades</option>
                       <option value="Baixa">Baixa</option>
@@ -475,7 +475,7 @@ export const ProjectsPage = () => {
                     <select
                       value={filters.responsavel}
                       onChange={(e) => setFilters({ ...filters, responsavel: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os responsáveis</option>
                       {usuarios.map(u => <option key={u.uuid} value={u.uuid}>{u.fullName}</option>)}
@@ -486,7 +486,7 @@ export const ProjectsPage = () => {
                 <div className="pt-8 flex flex-col gap-3">
                   <button
                     onClick={clearFilters}
-                    className="w-full py-3 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                    className="w-full py-3 flex items-center justify-center gap-2 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-zinc-700 transition-all"
                   >
                     <RotateCcw size={14} />
                     Limpar Filtros

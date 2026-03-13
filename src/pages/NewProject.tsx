@@ -200,7 +200,7 @@ export const NewProjectPage = () => {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-zinc-950">
       <Header 
         title="Novo Projeto" 
         subtitle="Inicie um novo projeto preenchendo as informações multietapa." 
@@ -219,7 +219,7 @@ export const NewProjectPage = () => {
                       ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20" 
                       : currentStep > index + 1
                       ? "bg-emerald-500 border-emerald-500 text-white"
-                      : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400"
+                      : "bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 text-slate-400"
                   )}
                 >
                   {currentStep > index + 1 ? <CheckCircle2 size={18} /> : step.icon}
@@ -233,7 +233,7 @@ export const NewProjectPage = () => {
               </div>
             ))}
           </div>
-          <div className="absolute top-5 left-0 right-0 h-0.5 bg-slate-200 dark:bg-slate-800 -z-0">
+          <div className="absolute top-5 left-0 right-0 h-0.5 bg-slate-200 dark:bg-zinc-800 -z-0">
             <motion.div 
               className="h-full bg-indigo-600"
               initial={{ width: '0%' }}
@@ -251,7 +251,7 @@ export const NewProjectPage = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6"
+                className="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm space-y-6"
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg flex items-center justify-center text-indigo-600">
@@ -273,7 +273,7 @@ export const NewProjectPage = () => {
                       onChange={handleChange}
                       type="text"
                       placeholder="Ex: Novo Portal do Cliente"
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -284,7 +284,7 @@ export const NewProjectPage = () => {
                         value={formData.escopo}
                         onChange={handleChange}
                         rows={3}
-                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                       />
                     </div>
                     <div className="space-y-2">
@@ -294,7 +294,7 @@ export const NewProjectPage = () => {
                         value={formData.objetivo}
                         onChange={handleChange}
                         rows={3}
-                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                       />
                     </div>
                   </div>
@@ -305,7 +305,7 @@ export const NewProjectPage = () => {
                       value={formData.justificativaInclusao}
                       onChange={handleChange}
                       rows={3}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                     />
                   </div>
                 </div>
@@ -318,7 +318,7 @@ export const NewProjectPage = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6"
+                className="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm space-y-6"
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center justify-center text-amber-600">
@@ -341,7 +341,7 @@ export const NewProjectPage = () => {
                         value={formData.dataInicio}
                         onChange={handleChange}
                         type="date"
-                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                       />
                     </div>
                   </div>
@@ -352,7 +352,7 @@ export const NewProjectPage = () => {
                       name="idTipo"
                       value={formData.idTipo}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                     >
                       <option value="">Selecione um template...</option>
                       {projectTypes.map(t => (
@@ -366,7 +366,7 @@ export const NewProjectPage = () => {
                       name="tipoContratacao"
                       value={formData.tipoContratacao}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                     >
                       <option value="">Selecione...</option>
                       {hirings.map(h => (
@@ -380,7 +380,7 @@ export const NewProjectPage = () => {
                       name="classificacao"
                       value={formData.classificacao}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
                     >
                       <option value="">Selecione...</option>
                       {classifications.map(c => (
@@ -400,7 +400,7 @@ export const NewProjectPage = () => {
                             "flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all border-2",
                             formData.prioridade === p 
                               ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20" 
-                              : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 hover:border-indigo-600/50"
+                              : "bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 text-slate-400 hover:border-indigo-600/50"
                           )}
                         >
                           {p}
@@ -418,7 +418,7 @@ export const NewProjectPage = () => {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6"
+                className="bg-white dark:bg-zinc-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm space-y-6"
               >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center text-emerald-600">
@@ -443,7 +443,7 @@ export const NewProjectPage = () => {
                             "flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left group",
                             formData.responsavel1 === u.uuid
                               ? "border-indigo-600 bg-indigo-50/30 dark:bg-indigo-900/10"
-                              : "border-slate-100 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-900"
+                              : "border-slate-100 dark:border-zinc-800 hover:border-indigo-300 dark:hover:border-indigo-900"
                           )}
                         >
                           <img 
@@ -470,7 +470,7 @@ export const NewProjectPage = () => {
                   </div>
 
                   {formData.fotoRes1 && (
-                    <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center gap-4">
+                    <div className="p-4 bg-slate-50 dark:bg-zinc-800 rounded-2xl border border-slate-200 dark:border-zinc-700 flex items-center gap-4">
                       <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600">
                         <ImageIcon size={20} />
                       </div>
@@ -481,7 +481,7 @@ export const NewProjectPage = () => {
                     </div>
                   )}
 
-                  <div className="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-6">
+                  <div className="pt-8 border-t border-slate-100 dark:border-zinc-800 space-y-6">
                     <div>
                       <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2 mb-4">
                         <Users size={16} className="text-indigo-600" />
@@ -497,7 +497,7 @@ export const NewProjectPage = () => {
                                 "flex flex-col p-4 rounded-2xl border-2 transition-all group",
                                 isMember
                                   ? "border-emerald-500 bg-emerald-50/10 dark:bg-emerald-900/10"
-                                  : "border-slate-100 dark:border-slate-800 hover:border-indigo-300"
+                                  : "border-slate-100 dark:border-zinc-800 hover:border-indigo-300"
                               )}
                             >
                               <div className="flex items-center gap-4 mb-3">
@@ -519,7 +519,7 @@ export const NewProjectPage = () => {
                                     "p-2 rounded-lg transition-all",
                                     isMember 
                                       ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
-                                      : "bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-indigo-600"
+                                      : "bg-slate-100 dark:bg-zinc-800 text-slate-400 hover:text-indigo-600"
                                   )}
                                 >
                                   {isMember ? <CheckCircle2 size={16} /> : <Plus size={16} />}
@@ -538,7 +538,7 @@ export const NewProjectPage = () => {
                                     placeholder="Ex: Arquiteto de Software"
                                     value={teamMembers.find(m => m.uid === u.uuid)?.atribuicao || ''}
                                     onChange={(e) => updateAttribution(u.uuid, e.target.value)}
-                                    className="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/50 rounded-lg text-[11px] font-bold focus:ring-1 focus:ring-emerald-500 outline-none"
+                                    className="w-full px-3 py-1.5 bg-white dark:bg-zinc-900 border border-emerald-200 dark:border-emerald-900/50 rounded-lg text-[11px] font-bold focus:ring-1 focus:ring-emerald-500 outline-none"
                                   />
                                 </motion.div>
                               )}
@@ -557,7 +557,7 @@ export const NewProjectPage = () => {
             <button
               type="button"
               onClick={currentStep === 1 ? () => navigate(-1) : handleBack}
-              className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all shadow-sm"
+              className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-zinc-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-zinc-800 rounded-xl font-bold text-sm hover:bg-slate-50 transition-all shadow-sm"
             >
               {currentStep === 1 ? <ArrowLeft size={18} /> : <ChevronLeft size={18} />}
               {currentStep === 1 ? 'Cancelar' : 'Anterior'}

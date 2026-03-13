@@ -116,7 +116,7 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                 };
             case 'Não aplicável':
                 return {
-                    bg: 'bg-slate-50 dark:bg-slate-900/40',
+                    bg: 'bg-slate-50 dark:bg-zinc-900/40',
                     text: 'text-slate-400 dark:text-slate-500',
                     dot: 'bg-slate-400',
                     icon: MinusCircle
@@ -184,11 +184,11 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
             className="space-y-6"
         >
             {/* Table Section */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                            <tr className="bg-slate-50 dark:bg-zinc-800/50 border-b border-slate-200 dark:border-zinc-800">
                                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-slate-400">Nome do Marco</th>
                                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-slate-400">Data Prevista</th>
                                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-slate-400">Data Real / Proj.</th>
@@ -196,13 +196,13 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                                 <th className="px-6 py-4 text-[10px] font-black uppercase tracking-wider text-slate-400">Ações</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                             {milestones.map((m) => {
                                 const st = getStatusStyles(m.status);
                                 const isEditing = editingId === m.id;
 
                                 return (
-                                    <tr key={m.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                                    <tr key={m.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{m.nome}</span>
@@ -218,7 +218,7 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                                                     type="date"
                                                     value={editForm.dataReal}
                                                     onChange={(e) => setEditForm({ ...editForm, dataReal: e.target.value })}
-                                                    className="text-sm font-bold bg-slate-100 dark:bg-slate-800 border-none rounded-lg px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-600"
+                                                    className="text-sm font-bold bg-slate-100 dark:bg-zinc-800 border-none rounded-lg px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-600"
                                                 />
                                             ) : (
                                                 <div className="flex items-center gap-2">
@@ -237,7 +237,7 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                                                 <select
                                                     value={editForm.status}
                                                     onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                                                    className="text-xs font-bold bg-slate-100 dark:bg-slate-800 border-none rounded-lg px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-600"
+                                                    className="text-xs font-bold bg-slate-100 dark:bg-zinc-800 border-none rounded-lg px-2 py-1 outline-none focus:ring-2 focus:ring-indigo-600"
                                                 >
                                                     {["Pendente", "Atrasado", "Programado", "Concluído", "Não aplicável"].map(s => (
                                                         <option key={s} value={s}>{s}</option>
@@ -268,7 +268,7 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                                                             <button
                                                                 onClick={() => setEditingId(null)}
                                                                 disabled={isSaving}
-                                                                className="p-1.5 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition-colors"
+                                                                className="p-1.5 bg-slate-200 dark:bg-zinc-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 transition-colors"
                                                             >
                                                                 <X size={14} />
                                                             </button>
@@ -293,7 +293,7 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
             </div>
 
             {/* Gantt Chart Section */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between mb-10">
                     <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
                         <BarChart3 size={16} className="text-indigo-600" />
@@ -307,10 +307,10 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                         {[0, 0.25, 0.5, 0.75, 1].map((p) => (
                             <div
                                 key={p}
-                                className="absolute h-full border-l border-slate-100 dark:border-slate-800/50"
+                                className="absolute h-full border-l border-slate-100 dark:border-zinc-800/50"
                                 style={{ left: `${p * 100}%` }}
                             >
-                                <span className="absolute -top-10 -translate-x-1/2 text-[9px] font-black text-slate-400 whitespace-nowrap bg-white dark:bg-slate-900 px-1 py-0.5 rounded shadow-sm border border-slate-100 dark:border-slate-800">
+                                <span className="absolute -top-10 -translate-x-1/2 text-[9px] font-black text-slate-400 whitespace-nowrap bg-white dark:bg-zinc-900 px-1 py-0.5 rounded shadow-sm border border-slate-100 dark:border-zinc-800">
                                     {formatDate(new Date(startOffset + totalDuration * p))}
                                 </span>
                             </div>
@@ -335,11 +335,11 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
 
                                     <div className="flex-1 h-2 relative flex items-center">
                                         {/* Background Track */}
-                                        <div className="absolute left-0 right-0 h-1 bg-slate-50 dark:bg-slate-800/40 rounded-full pointer-events-none" />
+                                        <div className="absolute left-0 right-0 h-1 bg-slate-50 dark:bg-zinc-800/40 rounded-full pointer-events-none" />
 
                                         {/* Baseline Marker (Planned Point) */}
                                         <div
-                                            className="absolute w-2 h-2 bg-slate-200 dark:bg-slate-700 rounded-full -translate-x-1/2 z-0 border border-white dark:border-slate-900"
+                                            className="absolute w-2 h-2 bg-slate-200 dark:bg-zinc-700 rounded-full -translate-x-1/2 z-0 border border-white dark:border-zinc-900"
                                             style={{ left: `${prevX}%` }}
                                             title={`Previsto: ${formatDate(m.dataPrevista)}`}
                                         />
@@ -369,7 +369,7 @@ export const ProjectMilestones = ({ projectId, responsavelId }: ProjectMilestone
                                             transition={{ delay: 0.5 }}
                                             className={cn(
                                                 "absolute -translate-x-1/2 z-30 flex items-center justify-center",
-                                                "w-5 h-5 rounded-full border-2 border-white dark:border-slate-900 shadow-lg",
+                                                "w-5 h-5 rounded-full border-2 border-white dark:border-zinc-900 shadow-lg",
                                                 st.bg, st.text
                                             )}
                                             style={{ left: `${realX}%` }}

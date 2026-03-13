@@ -129,7 +129,7 @@ export const UsersPage = () => {
 
       <div className="p-4 sm:p-8 space-y-6">
         {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm">
           <div className="relative w-full sm:w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input
@@ -137,7 +137,7 @@ export const UsersPage = () => {
               placeholder="Buscar por nome ou e-mail..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none transition-all"
             />
           </div>
 
@@ -148,13 +148,13 @@ export const UsersPage = () => {
                 "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative",
                 activeFiltersCount > 0 
                   ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300" 
-                  : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-800"
               )}
             >
               <Filter size={18} />
               Filtros
               {activeFiltersCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-in zoom-in duration-300">
+                <span className="absolute -top-2 -right-2 w-5 h-5 bg-indigo-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white dark:border-zinc-900 shadow-sm animate-in zoom-in duration-300">
                   {activeFiltersCount}
                 </span>
               )}
@@ -172,11 +172,11 @@ export const UsersPage = () => {
         </div>
 
         {/* Users Table */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                <tr className="bg-slate-50 dark:bg-zinc-800/50 border-b border-slate-200 dark:border-zinc-800">
                   <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-slate-500">Usuário</th>
                   <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-slate-500">E-mail</th>
                   <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-slate-500">Recurso Vinculado</th>
@@ -184,7 +184,7 @@ export const UsersPage = () => {
                   {isAdmin && <th className="px-6 py-4 text-xs font-black uppercase tracking-wider text-slate-500 text-right">Ações</th>}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                 {isLoading ? (
                   <tr>
                     <td colSpan={4} className="px-6 py-12 text-center">
@@ -193,7 +193,7 @@ export const UsersPage = () => {
                     </td>
                   </tr>
                 ) : filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                  <tr key={user.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <img
@@ -290,17 +290,17 @@ export const UsersPage = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl z-50 overflow-y-auto"
+              className="fixed right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-zinc-900 shadow-2xl z-50 overflow-y-auto"
             >
               <div className="p-6 space-y-8">
-                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4">
                   <div className="flex items-center gap-2">
                     <Filter className="text-indigo-600" size={20} />
                     <h2 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Filtros de Usuários</h2>
                   </div>
                   <button
                     onClick={() => setIsFilterOpen(false)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                   >
                     <X size={20} className="text-slate-400" />
                   </button>
@@ -313,7 +313,7 @@ export const UsersPage = () => {
                     <select 
                       value={filters.status}
                       onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os status</option>
                       <option value="Ativo">Ativo</option>
@@ -327,7 +327,7 @@ export const UsersPage = () => {
                     <select 
                       value={filters.idRecurso}
                       onChange={(e) => setFilters({ ...filters, idRecurso: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
+                      className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
                     >
                       <option value="">Todos os recursos</option>
                       {dbResources.map(r => (
@@ -340,7 +340,7 @@ export const UsersPage = () => {
                 <div className="pt-8 flex flex-col gap-3">
                   <button
                     onClick={clearFilters}
-                    className="w-full py-3 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                    className="w-full py-3 flex items-center justify-center gap-2 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-zinc-700 transition-all"
                   >
                     <RotateCcw size={14} />
                     Limpar Filtros

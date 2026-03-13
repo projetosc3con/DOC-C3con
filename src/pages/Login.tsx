@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 import loginCoverImg from '../assets/login_cover.png';
 import { useAuth } from '../context/AuthContext';
@@ -16,7 +16,8 @@ export const LoginPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Se já está autenticado, redireciona direto para o dashboard
-  if (!loading && session) {
+  // exceto se estivermos na landing page (raiz), onde queremos que o usuário escolha entrar
+  if (!loading && session && window.location.pathname !== '/') {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -37,9 +38,9 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 flex flex-col">
-      <header className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-6 py-4 bg-white dark:bg-slate-900">
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 font-sans text-slate-900 dark:text-slate-100 flex flex-col">
+      <header className="flex items-center justify-between border-b border-slate-200 dark:border-zinc-800 px-6 py-4 bg-white dark:bg-zinc-900">
+        <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center overflow-hidden">
             <img src={logoImg} alt="Logo" className="w-full h-full object-contain" />
           </div>
@@ -47,14 +48,14 @@ export const LoginPage = () => {
             <h2 className="text-lg font-bold tracking-tight uppercase leading-tight">Doc</h2>
             <p className="text-[10px] font-medium text-indigo-600 tracking-tighter">Project Management</p>
           </div>
-        </div>
+        </Link>
         <div className="flex items-center gap-4">
           <span className="text-sm text-slate-500 dark:text-slate-400 hidden sm:block">Gerenciamento Profissional de Projetos</span>
         </div>
       </header>
 
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 bg-white dark:bg-slate-900 rounded-xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+        <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 bg-white dark:bg-zinc-900 rounded-xl shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800">
           <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-16">
             <div className="mb-8 sm:mb-10">
               <h1 className="text-2xl sm:text-3xl font-bold mb-2">Bem-vindo de volta</h1>
@@ -80,7 +81,7 @@ export const LoginPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all text-slate-900 dark:text-slate-100 text-sm sm:text-base"
+                    className="w-full pl-10 pr-4 py-2.5 sm:py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all text-slate-900 dark:text-slate-100 text-sm sm:text-base"
                     placeholder="nome@empresa.com.br"
                   />
                 </div>
@@ -98,7 +99,7 @@ export const LoginPage = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full pl-10 pr-12 py-2.5 sm:py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all text-slate-900 dark:text-slate-100 text-sm sm:text-base"
+                    className="w-full pl-10 pr-12 py-2.5 sm:py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all text-slate-900 dark:text-slate-100 text-sm sm:text-base"
                     placeholder="••••••••"
                   />
                   <button
@@ -114,7 +115,7 @@ export const LoginPage = () => {
               <div className="flex items-center">
                 <input 
                   type="checkbox" 
-                  className="w-4 h-4 accent-indigo-600 bg-slate-50 dark:bg-slate-800 border-slate-300 dark:border-slate-700 rounded focus:ring-indigo-600 focus:ring-offset-white dark:focus:ring-offset-slate-900 transition-colors cursor-pointer" 
+                  className="w-4 h-4 accent-indigo-600 bg-slate-50 dark:bg-zinc-800 border-slate-300 dark:border-zinc-700 rounded focus:ring-indigo-600 focus:ring-offset-white dark:focus:ring-offset-zinc-900 transition-colors cursor-pointer" 
                   id="remember" 
                 />
                 <label htmlFor="remember" className="ml-2 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 cursor-pointer hover:text-indigo-600 transition-colors">
@@ -142,7 +143,7 @@ export const LoginPage = () => {
             </form>
           </div>
 
-          <div className="hidden lg:block relative bg-slate-50 dark:bg-slate-800">
+          <div className="hidden lg:block relative bg-slate-50 dark:bg-zinc-800">
             <div className="absolute inset-0 bg-indigo-600/5 opacity-50"></div>
             <div className="h-full w-full flex flex-col items-center justify-center p-12 text-center">
               <div className="w-full aspect-video rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-400 overflow-hidden shadow-2xl relative">

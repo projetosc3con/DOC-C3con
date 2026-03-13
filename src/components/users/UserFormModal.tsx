@@ -119,9 +119,9 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
+            className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800"
           >
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+            <div className="p-6 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-800/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
                   <UserPlus size={20} />
@@ -133,7 +133,7 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-full transition-colors"
               >
                 <X size={20} />
               </button>
@@ -186,7 +186,7 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
                   {/* Avatar Preview */}
                   <div className="flex flex-col items-center gap-4">
                     <div className="relative flex flex-col items-center gap-2">
-                      <div className="w-32 h-32 rounded-full bg-slate-100 dark:bg-slate-800 border-4 border-indigo-600/10 flex items-center justify-center overflow-hidden relative group">
+                      <div className="w-32 h-32 rounded-full bg-slate-100 dark:bg-zinc-800 border-4 border-indigo-600/10 flex items-center justify-center overflow-hidden relative group">
                         {formData.profileUrl ? (
                           <img src={formData.profileUrl} alt="Preview" className="w-full h-full object-cover" />
                         ) : (
@@ -212,7 +212,7 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
                         type="text"
                         value={formData.fullName}
                         onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none"
                         placeholder="Ex: João Silva"
                       />
                     </div>
@@ -228,7 +228,7 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           className={cn(
-                            "w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none",
+                            "w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none",
                             editingUser && "opacity-60 cursor-not-allowed"
                           )}
                           placeholder="exemplo@email.com"
@@ -243,7 +243,7 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
                         required
                         value={formData.idRecurso}
                         onChange={(e) => setFormData({ ...formData, idRecurso: e.target.value })}
-                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none"
                       >
                         <option value="">Selecione um recurso...</option>
                         {dbResources.map(r => (
@@ -255,14 +255,14 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
                 </div>
               )}
 
-              <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+              <div className="pt-6 border-t border-slate-100 dark:border-zinc-800 flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => {
                       onClose();
                       if (statusMessage?.type === 'success') onSuccess();
                   }}
-                  className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                  className="px-6 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                 >
                   {statusMessage?.type === 'success' ? 'Fechar' : 'Cancelar'}
                 </button>

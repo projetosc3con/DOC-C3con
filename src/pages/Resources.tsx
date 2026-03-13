@@ -140,7 +140,7 @@ export const ResourcesPage = () => {
       <div className="p-4 sm:p-8 grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
         <section className="xl:col-span-1">
           {isAdmin ? (
-            <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-24">
+            <div className="bg-white dark:bg-zinc-900 p-4 sm:p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm sticky top-24">
               <h3 className="text-base sm:text-lg font-bold mb-6 flex items-center gap-2 text-slate-900 dark:text-slate-50">
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
                   <UserPlus size={18} />
@@ -182,7 +182,7 @@ export const ResourcesPage = () => {
                     type="text"
                     value={formData.nomeExibicao}
                     onChange={(e) => setFormData({ ...formData, nomeExibicao: e.target.value })}
-                    className="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 transition-all font-medium"
+                    className="w-full rounded-lg border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 transition-all font-medium"
                     placeholder="Ex: Administrador, Gestor de Obras..."
                   />
                 </div>
@@ -193,7 +193,7 @@ export const ResourcesPage = () => {
                     rows={4}
                     value={formData.escopo}
                     onChange={(e) => setFormData({ ...formData, escopo: e.target.value })}
-                    className="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 resize-none transition-all font-medium"
+                    className="w-full rounded-lg border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-sm focus:ring-2 focus:ring-indigo-600 outline-none p-2.5 text-slate-900 dark:text-slate-100 resize-none transition-all font-medium"
                     placeholder="Descreva as responsabilidades ou o escopo deste recurso..."
                   />
                 </div>
@@ -206,7 +206,7 @@ export const ResourcesPage = () => {
                         setFormData({ nomeExibicao: '', escopo: '' });
                         setStatusMessage(null);
                       }}
-                      className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                      className="flex-1 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-300 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
                     >
                       Cancelar
                     </button>
@@ -222,8 +222,8 @@ export const ResourcesPage = () => {
               </form>
             </div>
           ) : (
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm sticky top-24 flex flex-col items-center justify-center text-center gap-4 py-12">
-              <div className="w-14 h-14 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center">
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm sticky top-24 flex flex-col items-center justify-center text-center gap-4 py-12">
+              <div className="w-14 h-14 bg-slate-100 dark:bg-zinc-800 rounded-full flex items-center justify-center">
                 <Lock size={24} className="text-slate-400" />
               </div>
               <div>
@@ -245,8 +245,8 @@ export const ResourcesPage = () => {
         </section>
 
         <section className="xl:col-span-2 space-y-6">
-          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden min-h-[400px]">
-            <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="bg-white dark:bg-zinc-900 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden min-h-[400px]">
+            <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-zinc-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-50">Recursos Cadastrados</h3>
               <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -254,7 +254,7 @@ export const ResourcesPage = () => {
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm py-2 w-full sm:w-64 focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100 transition-all"
+                  className="pl-10 pr-4 rounded-lg border border-slate-200 dark:border-zinc-700 bg-slate-50 dark:bg-zinc-800 text-sm py-2 w-full sm:w-64 focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100 transition-all"
                   placeholder="Filtrar por nome ou escopo..."
                 />
               </div>
@@ -262,7 +262,7 @@ export const ResourcesPage = () => {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-[10px] font-black uppercase tracking-widest border-b border-slate-200 dark:border-slate-800">
+                <thead className="bg-slate-50 dark:bg-zinc-800/50 text-slate-500 text-[10px] font-black uppercase tracking-widest border-b border-slate-200 dark:border-zinc-800">
                   <tr>
                     <th className="px-6 py-4">Nome do Recurso</th>
                     <th className="px-6 py-4">Escopo / Descrição</th>
@@ -270,7 +270,7 @@ export const ResourcesPage = () => {
                     <th className="px-6 py-4 text-right">Ações</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
                   {isLoading ? (
                     <tr>
                       <td colSpan={4} className="px-6 py-12 text-center">
@@ -285,7 +285,7 @@ export const ResourcesPage = () => {
                       </td>
                     </tr>
                   ) : filteredResources.map((resource) => (
-                    <tr key={resource.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                    <tr key={resource.id} className="hover:bg-slate-50 dark:hover:bg-zinc-800/50 transition-colors group">
                       <td className="px-6 py-4">
                         <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{resource.nomeExibicao}</span>
                       </td>
@@ -317,7 +317,7 @@ export const ResourcesPage = () => {
                                 </button>
                                 <button
                                   onClick={() => setConfirmDelete(null)}
-                                  className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                  className="px-3 py-1 bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-slate-400 rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors"
                                 >
                                   Não
                                 </button>
