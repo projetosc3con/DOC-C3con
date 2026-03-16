@@ -6,7 +6,8 @@ import { ProjectMilestones } from '../components/projects/ProjectMilestones';
 import { ProjectFlows } from '../components/projects/ProjectFlows';
 import { ProjectComments } from '../components/projects/ProjectComments';
 import { ProjectTeam } from '../components/projects/ProjectTeam';
-import { ArrowLeft, AlertCircle, FileText, Loader2, Users, Upload, Download, Calendar } from 'lucide-react';
+import { ProjectFinancial } from '../components/projects/ProjectFinancial';
+import { ArrowLeft, AlertCircle, FileText, Loader2, Users, Upload, Download, Calendar, FileSpreadsheet } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from '../lib/supabase';
@@ -33,10 +34,12 @@ export const ProjectDetailsPage = () => {
   const [phasesList, setPhasesList] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploadingSchedule, setIsUploadingSchedule] = useState(false);
+  const [isUploadingExcel, setIsUploadingExcel] = useState(false);
   const scheduleInputRef = useRef<HTMLInputElement>(null);
+  const excelInputRef = useRef<HTMLInputElement>(null);
 
-  const initialTab = searchParams.get('tab') as 'info' | 'milestones' | 'team' | 'comments' | 'flows' || 'info';
-  const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'team' | 'comments' | 'flows'>(initialTab);
+  const initialTab = searchParams.get('tab') as 'info' | 'milestones' | 'team' | 'comments' | 'flows' | 'financial' || 'info';
+  const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'team' | 'comments' | 'flows' | 'financial'>(initialTab);
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -134,11 +137,27 @@ export const ProjectDetailsPage = () => {
           {/* Left Column: Main Info */}
           <div className="lg:col-span-2 space-y-6">
             {/* Tabs */}
-            <div className="flex border-b border-slate-200 dark:border-zinc-800 overflow-x-auto no-scrollbar">
+            <style>{`
+              .scrollbar-custom::-webkit-scrollbar {
+                height: 4px;
+              }
+              .scrollbar-custom::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              .scrollbar-custom::-webkit-scrollbar-thumb {
+                background: rgba(99, 102, 241, 0.1);
+                border-radius: 10px;
+              }
+              .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+                background: rgba(99, 102, 241, 0.3);
+              }
+            `}</style>
+            <div className="flex border-b border-slate-200 dark:border-zinc-800 overflow-x-auto scrollbar-custom pb-1">
               {[
                 { id: 'info', label: 'Geral' },
                 { id: 'milestones', label: 'Marcos' },
                 { id: 'team', label: 'Equipe' },
+                { id: 'financial', label: 'Financeiro' },
                 { id: 'flows', label: 'Fluxos' },
                 { id: 'comments', label: 'Histórico' }
               ].map((tab) => (
@@ -193,6 +212,10 @@ export const ProjectDetailsPage = () => {
 
               {activeTab === 'comments' && (
                 <ProjectComments idProjeto={project.id} />
+              )}
+
+              {activeTab === 'financial' && (
+                <ProjectFinancial projectId={project.id} />
               )}
             </AnimatePresence>
           </div>
@@ -291,104 +314,200 @@ export const ProjectDetailsPage = () => {
               </div>
             </div>
 
-            {/* Cronograma MS Project */}
-            {(() => {
-              const isAdmin = user?.user_metadata?.roleName === 'Administrador';
-              const isResponsavel = user?.id === project?.responsavel1;
-              const canEdit = isAdmin || isResponsavel;
-              const cronogramaUrl = (project as any)?.cronogramaUrl as string | null | undefined;
+            {/* Cronogramas */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
+              {/* Cronograma MS Project */}
+              {(() => {
+                const isAdmin = user?.user_metadata?.roleName === 'Administrador';
+                const isResponsavel = user?.id === project?.responsavel1;
+                const canEdit = isAdmin || isResponsavel;
+                const cronogramaUrl = project.cronogramaUrl;
 
-              const handleScheduleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-                const file = e.target.files?.[0];
-                if (!file || !project) return;
-                setIsUploadingSchedule(true);
-                try {
-                  const ext = file.name.split('.').pop();
-                  const filePath = `project-${project.id}/cronograma.${ext}`;
-                  const { error: uploadError } = await supabase.storage
-                    .from('cronogramas')
-                    .upload(filePath, file, { upsert: true, cacheControl: '0' });
-                  if (uploadError) throw uploadError;
+                const handleScheduleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0];
+                  if (!file || !project) return;
+                  setIsUploadingSchedule(true);
+                  try {
+                    const ext = file.name.split('.').pop();
+                    const filePath = `project-${project.id}/cronograma.${ext}`;
+                    const { error: uploadError } = await supabase.storage
+                      .from('cronogramas')
+                      .upload(filePath, file, { upsert: true, cacheControl: '0' });
+                    if (uploadError) throw uploadError;
 
-                  const { data: { publicUrl } } = supabase.storage
-                    .from('cronogramas')
-                    .getPublicUrl(filePath);
+                    const { data: { publicUrl } } = supabase.storage
+                      .from('cronogramas')
+                      .getPublicUrl(filePath);
 
-                  const { error: dbError } = await supabase
-                    .from('Projetos')
-                    .update({ cronogramaUrl: publicUrl })
-                    .eq('id', project.id);
-                  if (dbError) throw dbError;
+                    const { error: dbError } = await supabase
+                      .from('Projetos')
+                      .update({ cronogramaUrl: publicUrl })
+                      .eq('id', project.id);
+                    if (dbError) throw dbError;
 
-                  setProject(prev => prev ? { ...prev, cronogramaUrl: publicUrl } as any : prev);
-                } catch (err) {
-                  console.error('Erro ao enviar cronograma:', err);
-                } finally {
-                  setIsUploadingSchedule(false);
-                  if (scheduleInputRef.current) scheduleInputRef.current.value = '';
-                }
-              };
+                    setProject(prev => prev ? { ...prev, cronogramaUrl: publicUrl } : prev);
+                  } catch (err) {
+                    console.error('Erro ao enviar cronograma:', err);
+                  } finally {
+                    setIsUploadingSchedule(false);
+                    if (scheduleInputRef.current) scheduleInputRef.current.value = '';
+                  }
+                };
 
-              return (
-                <div className="bg-indigo-600 p-6 rounded-2xl text-white shadow-xl shadow-indigo-600/30 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                    <Calendar size={80} />
-                  </div>
-                  <h3 className="font-bold text-lg mb-1 relative z-10">Cronograma MS Project</h3>
-                  <p className="text-xs text-indigo-100 mb-5 leading-relaxed relative z-10 font-medium">
-                    {cronogramaUrl
-                      ? 'Arquivo .mpp anexado a este projeto.'
-                      : 'Nenhum cronograma anexado ainda.'}
-                  </p>
+                return (
+                  <div className="bg-indigo-600 p-6 rounded-2xl text-white shadow-xl shadow-indigo-600/30 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                      <Calendar size={80} />
+                    </div>
+                    <h3 className="font-bold text-lg mb-1 relative z-10">Cronograma Físico</h3>
+                    <p className="text-xs text-indigo-100 mb-5 leading-relaxed relative z-10 font-medium">
+                      {cronogramaUrl
+                        ? 'Arquivo .mpp anexado a este projeto.'
+                        : 'Nenhum cronograma anexado ainda.'}
+                    </p>
 
-                  <div className="flex flex-col gap-2 relative z-10">
-                    {/* Botão de download — visível apenas se houver arquivo */}
-                    {cronogramaUrl && (
-                      <a
-                        href={cronogramaUrl}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-white text-indigo-600 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2"
-                      >
-                        <Download size={14} />
-                        Baixar Cronograma
-                      </a>
-                    )}
-
-                    {/* Botão de upload — visível apenas para admin/responsável */}
-                    {canEdit && (
-                      <>
-                        <input
-                          ref={scheduleInputRef}
-                          type="file"
-                          accept=".mpp,application/vnd.ms-project"
-                          className="hidden"
-                          onChange={handleScheduleUpload}
-                        />
-                        <button
-                          onClick={() => scheduleInputRef.current?.click()}
-                          disabled={isUploadingSchedule}
-                          className="w-full py-2.5 bg-white hover:bg-slate-50 text-indigo-600 rounded-xl text-xs font-black tracking-widest transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60"
+                    <div className="flex flex-row gap-2 relative z-10">
+                      {cronogramaUrl && (
+                        <a
+                          href={cronogramaUrl}
+                          download
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 py-1.5 bg-white text-indigo-600 rounded-lg text-[10px] font-black tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5"
                         >
-                          {isUploadingSchedule
-                            ? <><Loader2 size={14} className="animate-spin" /> Enviando...</>
-                            : <><Upload size={14} /> {cronogramaUrl ? 'Substituir Arquivo' : 'Anexar Cronograma'}</>
-                          }
-                        </button>
-                      </>
-                    )}
+                          <Download size={12} />
+                          Baixar
+                        </a>
+                      )}
 
-                    {/* Sem arquivo e sem permissão */}
-                    {!cronogramaUrl && !canEdit && (
-                      <span className="text-[10px] text-indigo-200 font-medium text-center italic">
-                        Aguardando o responsável anexar o arquivo.
-                      </span>
-                    )}
+                      {canEdit && (
+                        <>
+                          <input
+                            ref={scheduleInputRef}
+                            type="file"
+                            accept=".mpp,application/vnd.ms-project"
+                            className="hidden"
+                            onChange={handleScheduleUpload}
+                          />
+                          <button
+                            onClick={() => scheduleInputRef.current?.click()}
+                            disabled={isUploadingSchedule}
+                            className="flex-1 py-1.5 bg-white hover:bg-slate-50 text-indigo-600 rounded-lg text-[10px] font-black tracking-widest transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-60"
+                          >
+                            {isUploadingSchedule
+                              ? <><Loader2 size={12} className="animate-spin" /> ...</>
+                              : <><Upload size={12} /> {cronogramaUrl ? 'Substituir' : 'Anexar'}</>
+                            }
+                          </button>
+                        </>
+                      )}
+
+                      {!cronogramaUrl && !canEdit && (
+                        <span className="text-[10px] text-indigo-200 font-medium text-center italic">
+                          Aguardando o responsável anexar o arquivo.
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })()}
+                );
+              })()}
+
+              {/* Cronograma Excel */}
+              {(() => {
+                const isAdmin = user?.user_metadata?.roleName === 'Administrador';
+                const isResponsavel = user?.id === project?.responsavel1;
+                const canEdit = isAdmin || isResponsavel;
+                const cronogramaExcelUrl = project.cronogramaExcelUrl;
+
+                const handleExcelUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const file = e.target.files?.[0];
+                  if (!file || !project) return;
+                  setIsUploadingExcel(true);
+                  try {
+                    const ext = file.name.split('.').pop();
+                    const filePath = `project-${project.id}/cronograma-excel.${ext}`;
+                    const { error: uploadError } = await supabase.storage
+                      .from('cronogramas')
+                      .upload(filePath, file, { upsert: true, cacheControl: '0' });
+                    if (uploadError) throw uploadError;
+
+                    const { data: { publicUrl } } = supabase.storage
+                      .from('cronogramas')
+                      .getPublicUrl(filePath);
+
+                    const { error: dbError } = await supabase
+                      .from('Projetos')
+                      .update({ cronogramaExcelUrl: publicUrl })
+                      .eq('id', project.id);
+                    if (dbError) throw dbError;
+
+                    setProject(prev => prev ? { ...prev, cronogramaExcelUrl: publicUrl } : prev);
+                  } catch (err) {
+                    console.error('Erro ao enviar cronograma excel:', err);
+                  } finally {
+                    setIsUploadingExcel(false);
+                    if (excelInputRef.current) excelInputRef.current.value = '';
+                  }
+                };
+
+                return (
+                  <div className="bg-emerald-600 p-6 rounded-2xl text-white shadow-xl shadow-emerald-600/30 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                      <FileSpreadsheet size={80} />
+                    </div>
+                    <h3 className="font-bold text-lg mb-1 relative z-10">Cronograma Financeiro</h3>
+                    <p className="text-xs text-emerald-100 mb-5 leading-relaxed relative z-10 font-medium">
+                      {cronogramaExcelUrl
+                        ? 'Arquivo .xlsx anexado a este projeto.'
+                        : 'Nenhum cronograma excel anexado ainda.'}
+                    </p>
+
+                    <div className="flex flex-row gap-2 relative z-10">
+                      {cronogramaExcelUrl && (
+                        <a
+                          href={cronogramaExcelUrl}
+                          download
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 py-1.5 bg-white text-emerald-600 rounded-lg text-[10px] font-black tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5"
+                        >
+                          <Download size={12} />
+                          Baixar
+                        </a>
+                      )}
+
+                      {canEdit && (
+                        <>
+                          <input
+                            ref={excelInputRef}
+                            type="file"
+                            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+                            className="hidden"
+                            onChange={handleExcelUpload}
+                          />
+                          <button
+                            onClick={() => excelInputRef.current?.click()}
+                            disabled={isUploadingExcel}
+                            className="flex-1 py-1.5 bg-white hover:bg-slate-50 text-emerald-600 rounded-lg text-[10px] font-black tracking-widest transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-60"
+                          >
+                            {isUploadingExcel
+                              ? <><Loader2 size={12} className="animate-spin" /> ...</>
+                              : <><Upload size={12} /> {cronogramaExcelUrl ? 'Substituir' : 'Anexar'}</>
+                            }
+                          </button>
+                        </>
+                      )}
+
+                      {!cronogramaExcelUrl && !canEdit && (
+                        <span className="text-[10px] text-emerald-200 font-medium text-center italic">
+                          Aguardando o responsável anexar o arquivo.
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         </div>
       </div>

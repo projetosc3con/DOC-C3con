@@ -57,6 +57,8 @@ export interface Projeto {
   dataInicio: string | null;
   objetivo: string | null;
   escopo: string | null;
+  cronogramaUrl: string | null;
+  cronogramaExcelUrl: string | null;
 }
 
 export interface Comentario {
@@ -137,4 +139,27 @@ export interface Log {
   notificar: string; // Usuário a notificar
   projetoId?: number; // ID do projeto relacionado
   lido: boolean;
+}
+
+export interface FinanceiroPrevisto {
+  id: string;
+  idProjeto: number;
+  anoCarga: number;
+  n1: string;
+  n2: string;
+  valorJAN: number;
+  valorFEV: number;
+  valorMAR: number;
+  valorABR: number;
+  valorMAI: number;
+  valorJUN: number;
+  valorJUL: number;
+  valorAGO: number;
+  valorSET: number;
+  valorOUT: number;
+  valorNOV: number;
+  valorDEZ: number;
+  valorTotal: number;
+  createdAt: string;
+  updatedAt: string;
 }

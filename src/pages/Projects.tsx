@@ -22,6 +22,8 @@ interface Projeto {
   status: boolean;
   justificativaInclusao: string;
   createdAt: string;
+  cronogramaUrl: string | null;
+  cronogramaExcelUrl: string | null;
   proximoMarco?: {
     nome: string;
     data: string;
