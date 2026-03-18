@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
-import { Calendar, MoreVertical, AlertCircle, CheckCircle2, Info, ChevronRight, Loader2, Plus, Search, Filter, X, RotateCcw, User, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { Calendar, MoreVertical, AlertCircle, CheckCircle2, Info, ChevronRight, Loader2, Search, Filter, X, RotateCcw, User, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
@@ -210,13 +210,14 @@ export const ProjectsPage = () => {
                 </span>
               )}
             </button>
-            <button
-              onClick={() => navigate('/projects/new')}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 active:scale-95"
-            >
-              <Plus size={18} />
-              Novo Projeto
-            </button>
+            <div className="flex-1 sm:flex-none flex items-center gap-2 px-4 py-2 bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800/30 rounded-lg whitespace-nowrap">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-zinc-500">
+                Projetos:
+              </span>
+              <span className="text-sm font-black text-indigo-600 dark:text-indigo-400">
+                {totalCount}
+              </span>
+            </div>
           </div>
         </div>
 

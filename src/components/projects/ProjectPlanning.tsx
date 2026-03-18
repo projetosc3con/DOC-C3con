@@ -26,7 +26,7 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
-export const ProjectFinancial = ({ projectId }: { projectId: number }) => {
+export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
   const currentMonthIndex = 5; // Junho
 
   const rows = ['Previsto', 'Realizado', 'Projetado'];
