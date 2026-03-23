@@ -19,11 +19,14 @@ import { NewProjectTypePage } from './pages/NewProjectType';
 import { LandingPage } from './pages/Landing';
 
 export default function App() {
+  const hostname = window.location.hostname;
+  const isSubdomain = hostname.startsWith('suaempresa.') || hostname === 'localhost';
+
   return (
     <BrowserRouter>
       <Routes>
         {/* Rotas públicas */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={isSubdomain ? <Navigate to="/login" replace /> : <LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
 
         {/* Rotas protegidas — exigem autenticação */}

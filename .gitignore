@@ -7,3 +7,9 @@ coverage/
 .env*
 .env.local
 !.env.example
+
+# Excel e VBA
+*.xlsm
+*.bas
+*.frm
+ID-NOME-PROJETO.xlsm
