@@ -7,23 +7,14 @@ import { ProjectFlows } from '../components/projects/ProjectFlows';
 import { ProjectComments } from '../components/projects/ProjectComments';
 import { ProjectTeam } from '../components/projects/ProjectTeam';
 import { ProjectPlanning } from '../components/projects/ProjectPlanning';
-import { ArrowLeft, AlertCircle, FileText, Loader2, Users, Upload, Download, Calendar, FileSpreadsheet, Info, History, Workflow, Target, FileSignature, Calculator, PanelRightClose, PanelLeft } from 'lucide-react';
+import { ArrowLeft, AlertCircle, FileText, Loader2, Users, Calendar, FileSpreadsheet, Info, History, Workflow, Target, FileSignature, Calculator, PanelRightClose, PanelLeft, CloudDownload, CloudUpload } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from '../lib/supabase';
 import { Projeto } from '../types';
 import { getPhaseStyles } from '../utils/projectColors';
 import { useAuth } from '../context/AuthContext';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const mockPhysicalProgressData = [
-  { name: 'Jan', planned: 5, actual: 5 },
-  { name: 'Fev', planned: 15, actual: 12 },
-  { name: 'Mar', planned: 30, actual: 25 },
-  { name: 'Abr', planned: 50, actual: 48 },
-  { name: 'Mai', planned: 75, actual: 60 },
-  { name: 'Jun', planned: 100, actual: 80 },
-];
+import { ResponsiveContainer, PieChart, Pie } from 'recharts';
 
 export const ProjectDetailsPage = () => {
   const { id } = useParams();
@@ -35,6 +26,7 @@ export const ProjectDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploadingSchedule, setIsUploadingSchedule] = useState(false);
   const [isUploadingExcel, setIsUploadingExcel] = useState(false);
+  const [indicadores, setIndicadores] = useState<{ iefAcum: number; iefin: number } | null>(null);
   const scheduleInputRef = useRef<HTMLInputElement>(null);
   const excelInputRef = useRef<HTMLInputElement>(null);
 
@@ -73,6 +65,14 @@ export const ProjectDetailsPage = () => {
 
       if (error) throw error;
       setProject(data);
+
+      const { data: indicadoresData } = await supabase
+        .from('IndicadoresProjeto')
+        .select('iefAcum, iefin')
+        .eq('idProjeto', id)
+        .maybeSingle();
+
+      setIndicadores(indicadoresData);
     } catch (err) {
       console.error('Erro ao buscar detalhes do projeto:', err);
     } finally {
@@ -286,46 +286,63 @@ export const ProjectDetailsPage = () => {
                   </span>
                 </div>
 
-                <div className="pt-6 ">
-                  <h4 className="text-[10px] text-slate-400 font-black tracking-widest mb-2 uppercase text-center">Avanço Físico</h4>
-                  <div className="h-[180px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={mockPhysicalProgressData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="colorPlannedProject" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#cbd5e1" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="#cbd5e1" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                        <XAxis
-                          dataKey="name"
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fontSize: 10, fill: '#64748b' }}
-                        />
-                        <YAxis
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{ fontSize: 10, fill: '#64748b' }}
-                        />
-                        <Tooltip
-                          contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '10px' }}
-                        />
-                        <Area type="monotone" dataKey="planned" name="Previsto (%)" stroke="#94a3b8" strokeDasharray="4 4" fillOpacity={1} fill="url(#colorPlannedProject)" strokeWidth={2} />
-                        <Area type="monotone" dataKey="actual" name="Realizado (%)" stroke="#ec4899" fillOpacity={0} strokeWidth={2} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <div className="flex justify-center gap-4 mt-2">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-slate-400"></div>
-                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Previsto</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-pink-500"></div>
-                      <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Realizado</span>
-                    </div>
+                <div className="pt-6 space-y-8">
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { title: 'IEF Acumulado', actual: (indicadores?.iefAcum || 0) * 100, planned: 100 },
+                      { title: 'IEFin', actual: (indicadores?.iefin || 0) * 100, planned: 100 },
+                    ].map((kpi, idx) => {
+                      const percentage = kpi.planned > 0 ? (kpi.actual / kpi.planned) * 100 : 0;
+                      const clampedPercent = Math.min(Math.max(percentage, 0), 200);
+                      const rotationDeg = -90 + (clampedPercent / 200) * 180;
+                      const isHealthy = percentage >= 85 && percentage <= 100;
+                      const textColor = isHealthy ? "text-emerald-500" : (percentage < 85 ? "text-amber-500" : "text-red-500");
+
+                      return (
+                        <div key={idx} className="flex flex-col items-center">
+                          <h4 className="text-[9px] text-slate-400 font-black tracking-widest mb-4 text-center">{kpi.title}</h4>
+                          <div className="h-[80px] w-full relative flex justify-center">
+                            <div className="absolute inset-0 overflow-hidden" style={{ height: '80px' }}>
+                              <ResponsiveContainer width="100%" height={160}>
+                                <PieChart>
+                                  <Pie
+                                    data={[
+                                      { value: 85, fill: '#818cf8' },
+                                      { value: 15, fill: '#4f46e5' },
+                                      { value: 100, fill: '#c7d2fe' }
+                                    ]}
+                                    cx="50%"
+                                    cy={80}
+                                    startAngle={180}
+                                    endAngle={0}
+                                    innerRadius={50}
+                                    outerRadius={70}
+                                    dataKey="value"
+                                    stroke="none"
+                                  />
+                                </PieChart>
+                              </ResponsiveContainer>
+                            </div>
+
+                            {/* Needle */}
+                            <div
+                              className="absolute bottom-0 left-1/2 origin-bottom transition-transform duration-1000 ease-out"
+                              style={{ height: '65px', transform: `translateX(-50%) rotate(${rotationDeg}deg)` }}
+                            >
+                              <div className="w-[3px] h-full rounded-t-full bg-slate-800 dark:bg-zinc-300 shadow-sm mx-auto" />
+                              <div className="w-4 h-4 rounded-full bg-slate-900 dark:bg-white border-[3px] border-white dark:border-zinc-800 absolute -bottom-2 -left-[6.5px] shadow-sm" />
+                            </div>
+
+                            {/* Value display */}
+                            <div className="absolute -bottom-6 left-0 right-0 text-center">
+                              <span className={cn("text-lg font-black tracking-tighter", textColor)}>
+                                {percentage.toFixed(0)}%
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -409,39 +426,64 @@ export const ProjectDetailsPage = () => {
                           : 'Nenhum cronograma anexado ainda.'}
                       </p>
 
-                      <div className="flex flex-row gap-2 relative z-10">
-                        {cronogramaUrl && (
-                          <a
-                            href={cronogramaUrl}
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 py-1.5 bg-white text-indigo-600 rounded-lg text-[10px] font-black tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5"
-                          >
-                            <Download size={12} />
-                            Baixar
-                          </a>
-                        )}
-
-                        {canEdit && (
+                      <div className="flex flex-row items-center justify-between gap-2 relative z-10 mt-auto">
+                        {cronogramaUrl ? (
                           <>
-                            <input
-                              ref={scheduleInputRef}
-                              type="file"
-                              accept=".mpp,application/vnd.ms-project"
-                              className="hidden"
-                              onChange={handleScheduleUpload}
-                            />
-                            <button
-                              onClick={() => scheduleInputRef.current?.click()}
-                              disabled={isUploadingSchedule}
-                              className="flex-1 py-1.5 bg-white hover:bg-slate-50 text-indigo-600 rounded-lg text-[10px] font-black tracking-widest transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-60"
+                            <a
+                              href={cronogramaUrl}
+                              download
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-12 h-12 flex items-center justify-center bg-white text-indigo-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95"
+                              title="Visualizar cronograma"
                             >
-                              {isUploadingSchedule
-                                ? <><Loader2 size={12} className="animate-spin" /> ...</>
-                                : <><Upload size={12} /> {cronogramaUrl ? 'Substituir' : 'Anexar'}</>
-                              }
-                            </button>
+                              <CloudDownload size={20} />
+                            </a>
+
+                            {canEdit && (
+                              <div className="flex items-center">
+                                <input
+                                  ref={scheduleInputRef}
+                                  type="file"
+                                  accept=".mpp,application/vnd.ms-project"
+                                  className="hidden"
+                                  title="Substituir arquivo"
+                                  onChange={handleScheduleUpload}
+                                />
+                                <button
+                                  onClick={() => scheduleInputRef.current?.click()}
+                                  disabled={isUploadingSchedule}
+                                  className="p-2 bg-transparent text-indigo-100 hover:text-white hover:bg-white/10 rounded-lg transition-all flex items-center gap-1.5"
+                                  title="Substituir arquivo"
+                                >
+                                  {isUploadingSchedule ? <Loader2 size={16} className="animate-spin" /> : <CloudUpload size={16} />}
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {canEdit ? (
+                              <>
+                                <input
+                                  ref={scheduleInputRef}
+                                  type="file"
+                                  accept=".mpp,application/vnd.ms-project"
+                                  className="hidden"
+                                  onChange={handleScheduleUpload}
+                                />
+                                <button
+                                  onClick={() => scheduleInputRef.current?.click()}
+                                  disabled={isUploadingSchedule}
+                                  className="w-12 h-12 flex items-center justify-center bg-white text-indigo-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 disabled:opacity-60"
+                                  title="Anexar cronograma"
+                                >
+                                  {isUploadingSchedule ? <Loader2 size={20} className="animate-spin" /> : <CloudUpload size={20} />}
+                                </button>
+                              </>
+                            ) : (
+                              <div className="text-[10px] italic opacity-60">Sem arquivo</div>
+                            )}
                           </>
                         )}
                       </div>
@@ -498,39 +540,64 @@ export const ProjectDetailsPage = () => {
                           : 'Nenhum cronograma excel anexado ainda.'}
                       </p>
 
-                      <div className="flex flex-row gap-2 relative z-10">
-                        {cronogramaExcelUrl && (
-                          <a
-                            href={cronogramaExcelUrl}
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 py-1.5 bg-white text-emerald-600 rounded-lg text-[10px] font-black tracking-widest hover:bg-slate-50 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5"
-                          >
-                            <Download size={12} />
-                            Baixar
-                          </a>
-                        )}
-
-                        {canEdit && (
+                      <div className="flex flex-row items-center justify-between gap-2 relative z-10 mt-auto">
+                        {cronogramaExcelUrl ? (
                           <>
-                            <input
-                              ref={excelInputRef}
-                              type="file"
-                              accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
-                              className="hidden"
-                              onChange={handleExcelUpload}
-                            />
-                            <button
-                              onClick={() => excelInputRef.current?.click()}
-                              disabled={isUploadingExcel}
-                              className="flex-1 py-1.5 bg-white hover:bg-slate-50 text-emerald-600 rounded-lg text-[10px] font-black tracking-widest transition-all shadow-lg active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-60"
+                            <a
+                              href={cronogramaExcelUrl}
+                              download
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-12 h-12 flex items-center justify-center bg-white text-emerald-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95"
+                              title="Visualizar planilha"
                             >
-                              {isUploadingExcel
-                                ? <><Loader2 size={12} className="animate-spin" /> ...</>
-                                : <><Upload size={12} /> {cronogramaExcelUrl ? 'Substituir' : 'Anexar'}</>
-                              }
-                            </button>
+                              <CloudDownload size={20} />
+                            </a>
+
+                            {canEdit && (
+                              <div className="flex items-center">
+                                <input
+                                  ref={excelInputRef}
+                                  type="file"
+                                  accept=".xlsm"
+                                  className="hidden"
+                                  title="Substituir arquivo"
+                                  onChange={handleExcelUpload}
+                                />
+                                <button
+                                  onClick={() => excelInputRef.current?.click()}
+                                  disabled={isUploadingExcel}
+                                  className="p-2 bg-transparent text-emerald-100 hover:text-white hover:bg-white/10 rounded-lg transition-all flex items-center gap-1.5"
+                                  title="Substituir arquivo"
+                                >
+                                  {isUploadingExcel ? <Loader2 size={16} className="animate-spin" /> : <CloudUpload size={16} />}
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {canEdit ? (
+                              <>
+                                <input
+                                  ref={excelInputRef}
+                                  type="file"
+                                  accept=".xlsm"
+                                  className="hidden"
+                                  onChange={handleExcelUpload}
+                                />
+                                <button
+                                  onClick={() => excelInputRef.current?.click()}
+                                  disabled={isUploadingExcel}
+                                  className="w-12 h-12 flex items-center justify-center bg-white text-emerald-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 disabled:opacity-60"
+                                  title="Anexar cronograma"
+                                >
+                                  {isUploadingExcel ? <Loader2 size={20} className="animate-spin" /> : <CloudUpload size={20} />}
+                                </button>
+                              </>
+                            ) : (
+                              <div className="text-[10px] italic opacity-60">Sem arquivo</div>
+                            )}
                           </>
                         )}
                       </div>

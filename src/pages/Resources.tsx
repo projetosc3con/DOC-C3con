@@ -107,6 +107,13 @@ export const ResourcesPage = () => {
   };
 
   const handleDelete = async (id: string) => {
+    const resource = resources.find(r => r.id === id);
+    if (resource?.nomeExibicao === 'Administrador') {
+      setStatusMessage({ type: 'error', text: 'Não é possível excluir o recurso Administrador.' });
+      setConfirmDelete(null);
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('Recursos')
@@ -337,13 +344,15 @@ export const ResourcesPage = () => {
                                 >
                                   <Edit2 size={16} />
                                 </button>
-                                <button
-                                  onClick={() => setConfirmDelete(resource.id)}
-                                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
-                                  title="Excluir"
-                                >
-                                  <Trash2 size={16} />
-                                </button>
+                                {resource.nomeExibicao !== 'Administrador' && (
+                                  <button
+                                    onClick={() => setConfirmDelete(resource.id)}
+                                    className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all"
+                                    title="Excluir"
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                )}
                               </motion.div>
                             )}
                           </AnimatePresence>
