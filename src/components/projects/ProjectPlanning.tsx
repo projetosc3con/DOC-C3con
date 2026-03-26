@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, BarChart, Bar } from 'recharts';
 import { DollarSign, TrendingUp, ArrowUpRight, Loader2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { supabase } from '../../lib/supabase';
@@ -192,123 +192,303 @@ export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
         </div>
       </div>
 
-      {/* Capex Chart */}
-      <div className="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Desenvolvimento CAPEX</h3>
-            <p className="text-xs text-slate-400 font-medium mt-1">Comparativo acumulado Previsto vs Real/Projetado</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Real Data Column */}
+        <div className="space-y-8">
+          {/* Capex Chart */}
+          <div className="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Desenvolvimento CAPEX</h3>
+                <p className="text-xs text-slate-400 font-medium mt-1">Comparativo acumulado Previsto vs Real/Projetado</p>
+              </div>
+            </div>
+
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorPrevisto" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorRealizado" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorProjetado" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                    tickFormatter={(value) => `R$${value / 1000}k`}
+                  />
+                  <Tooltip
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
+                    formatter={(value: number) => formatCurrency(value)}
+                  />
+                  <Legend
+                    iconType="circle"
+                    wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '10px' }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="chartPrevisto"
+                    name="Previsto"
+                    stroke="#6366f1"
+                    fillOpacity={1}
+                    fill="url(#colorPrevisto)"
+                    strokeWidth={3}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="chartRealizado"
+                    name="Realizado"
+                    stroke="#10b981"
+                    fillOpacity={1}
+                    fill="url(#colorRealizado)"
+                    strokeWidth={3}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="chartProjetado"
+                    name="Projetado"
+                    stroke="#f59e0b"
+                    fillOpacity={1}
+                    fill="url(#colorProjetado)"
+                    strokeWidth={3}
+                    strokeDasharray="5 5"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Financial Table */}
+          <div className="bg-white dark:bg-zinc-900/50 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 dark:border-zinc-800">
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Detalhamento Financeiro</h3>
+            </div>
+            <div className="overflow-x-auto scrollbar-custom">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-zinc-800/50">
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 sticky left-0 bg-slate-50 dark:bg-zinc-800 z-10 w-40">Categoria</th>
+                    {tableData.slice(0, 12).map(col => (
+                      <th key={col.name} className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center min-w-[100px]">{col.name}</th>
+                    ))}
+                    <th className="px-6 py-4 text-[10px] font-black text-indigo-600 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-right sticky right-0 bg-slate-50 dark:bg-zinc-800 z-10">Total</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                  {rows.map((rowLabel) => {
+                    const key = rowLabel.toLowerCase() as 'previsto' | 'realizado' | 'projetado';
+                    return (
+                      <tr key={rowLabel} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                        <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 sticky left-0 bg-white dark:bg-zinc-900 z-10 border-r border-slate-50 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                          {rowLabel}
+                        </td>
+                        {tableData.slice(0, 12).map((data, idx) => (
+                          <td key={idx} className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
+                            {data[key] === 0 && key === 'realizado' && idx >= currentMonthIndex ? '--' : formatCurrency(data[key])}
+                          </td>
+                        ))}
+                        <td className="px-6 py-4 text-xs font-black text-slate-800 dark:text-slate-100 text-right sticky right-0 bg-white dark:bg-zinc-900 z-10 border-l border-slate-50 dark:border-zinc-800 shadow-[-2px_0_5px_rgba(0,0,0,0.02)]">
+                          {formatCurrencyMil(calculateTotal(key))}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id="colorPrevisto" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorRealizado" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorProjetado" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.1} />
-                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-              <XAxis
-                dataKey="name"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
-                tickFormatter={(value) => `R$${value / 1000}k`}
-              />
-              <Tooltip
-                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
-                formatter={(value: number) => formatCurrency(value)}
-              />
-              <Legend
-                iconType="circle"
-                wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '10px' }}
-              />
-              <Area
-                type="monotone"
-                dataKey="chartPrevisto"
-                name="Previsto"
-                stroke="#6366f1"
-                fillOpacity={1}
-                fill="url(#colorPrevisto)"
-                strokeWidth={3}
-              />
-              <Area
-                type="monotone"
-                dataKey="chartRealizado"
-                name="Realizado"
-                stroke="#10b981"
-                fillOpacity={1}
-                fill="url(#colorRealizado)"
-                strokeWidth={3}
-              />
-              <Area
-                type="monotone"
-                dataKey="chartProjetado"
-                name="Projetado"
-                stroke="#f59e0b"
-                fillOpacity={1}
-                fill="url(#colorProjetado)"
-                strokeWidth={3}
-                strokeDasharray="5 5"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+        {/* Mocked Data Column */}
+        <div className="space-y-8">
+          {/* Physical Progress (Avanço Físico) Chart */}
+          <div className="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Avanço Físico</h3>
+                <p className="text-xs text-slate-400 font-medium mt-1">Curva de desenvolvimento do projeto</p>
+              </div>
+            </div>
 
-      {/* Financial Table */}
-      <div className="bg-white dark:bg-zinc-900/50 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 dark:border-zinc-800">
-          <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Detalhamento Financeiro</h3>
-        </div>
-        <div className="overflow-x-auto scrollbar-custom">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 dark:bg-zinc-800/50">
-                <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 sticky left-0 bg-slate-50 dark:bg-zinc-800 z-10 w-40">Categoria</th>
-                {tableData.map(col => (
-                  <th key={col.name} className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center min-w-[100px]">{col.name}</th>
-                ))}
-                <th className="px-6 py-4 text-[10px] font-black text-indigo-600 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-right sticky right-0 bg-slate-50 dark:bg-zinc-800 z-10">Total</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
-              {rows.map((rowLabel) => {
-                const key = rowLabel.toLowerCase() as 'previsto' | 'realizado' | 'projetado';
+            <div className="h-[300px] w-full">
+              {(() => {
+                const physicalProgressData = monthNames.map((name, i) => {
+                  const monthNum = i + 1;
+                  const previsto = (monthNum / 12) * 100;
+                  
+                  // Mock physical progress: slightly behind planned
+                  let realizado = undefined;
+                  if (i < currentMonthIndex) {
+                    realizado = (monthNum / 12) * 88; // 88% of planned speed
+                  } else if (i === currentMonthIndex) {
+                    // Current month partial progress
+                    realizado = (monthNum / 12) * 88; 
+                  }
+
+                  // Projected continues from last realized and catches up slightly
+                  let projetado = undefined;
+                  if (i >= currentMonthIndex - 1) {
+                    projetado = (monthNum / 12) * 95;
+                  }
+
+                  return {
+                    name,
+                    percentPrevisto: previsto,
+                    percentRealizado: realizado,
+                    percentProjetado: projetado
+                  };
+                });
+
                 return (
-                  <tr key={rowLabel} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                    <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 sticky left-0 bg-white dark:bg-zinc-900 z-10 border-r border-slate-50 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
-                      {rowLabel}
-                    </td>
-                    {tableData.map((data, idx) => (
-                      <td key={idx} className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
-                        {data[key] === 0 && key === 'realizado' && idx >= currentMonthIndex ? '--' : formatCurrency(data[key])}
-                      </td>
-                    ))}
-                    <td className="px-6 py-4 text-xs font-black text-slate-800 dark:text-slate-100 text-right sticky right-0 bg-white dark:bg-zinc-900 z-10 border-l border-slate-50 dark:border-zinc-800 shadow-[-2px_0_5px_rgba(0,0,0,0.02)]">
-                      {formatCurrencyMil(calculateTotal(key))}
-                    </td>
-                  </tr>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={physicalProgressData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorProgress" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1} />
+                          <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                        </linearGradient>
+                        <linearGradient id="colorProjetadoProgress" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.1} />
+                          <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis
+                        dataKey="name"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                      />
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        domain={[0, 100]}
+                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                        tickFormatter={(value) => `${value}%`}
+                      />
+                      <Tooltip
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
+                        formatter={(value: number) => `${value.toFixed(1)}%`}
+                      />
+                      <Legend
+                        iconType="circle"
+                        wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '10px' }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="percentPrevisto"
+                        name="Previsto"
+                        stroke="#6366f1"
+                        fillOpacity={1}
+                        fill="url(#colorProgress)"
+                        strokeWidth={2}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="percentRealizado"
+                        name="Realizado"
+                        stroke="#10b981"
+                        fillOpacity={1}
+                        fill="rgba(16, 185, 129, 0.1)"
+                        strokeWidth={2}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="percentProjetado"
+                        name="Projetado"
+                        stroke="#f59e0b"
+                        fillOpacity={1}
+                        fill="url(#colorProjetadoProgress)"
+                        strokeWidth={2}
+                        strokeDasharray="5 5"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 );
-              })}
-            </tbody>
-          </table>
+              })()}
+            </div>
+          </div>
+
+          {/* Annual Bar Chart */}
+          <div className="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+            <div className="p-6 border-b border-slate-100 dark:border-zinc-800 mb-6">
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Visão Anual (2026 - 2050)</h3>
+            </div>
+            
+            <div className="h-[300px] w-full">
+              {(() => {
+                const yearlyData = [
+                  {
+                    name: String(new Date().getFullYear()),
+                    previsto: tableData.slice(0, 12).reduce((acc, curr) => acc + (curr.previsto || 0), 0),
+                    projetado: tableData.slice(0, 12).reduce((acc, curr) => acc + (curr.projetado || 0), 0),
+                  },
+                  ...tableData.slice(12)
+                ];
+
+                return (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={yearlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis
+                        dataKey="name"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 9, fill: '#64748b', fontWeight: 'bold' }}
+                        interval={2}
+                      />
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
+                        tickFormatter={(value) => `R$${value / 1000000}M`}
+                      />
+                      <Tooltip
+                        cursor={{ fill: 'rgba(99, 102, 241, 0.05)' }}
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
+                        formatter={(value: number) => formatCurrency(value)}
+                      />
+                      <Legend
+                        iconType="circle"
+                        wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '10px' }}
+                      />
+                      <Bar
+                        dataKey="previsto"
+                        name="Previsto"
+                        fill="#6366f1"
+                        radius={[4, 4, 0, 0]}
+                        barSize={12}
+                      />
+                      <Bar
+                        dataKey="projetado"
+                        name="Replan/Projetado"
+                        fill="#f59e0b"
+                        radius={[4, 4, 0, 0]}
+                        barSize={12}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                );
+              })()}
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>

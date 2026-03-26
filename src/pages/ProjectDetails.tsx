@@ -26,7 +26,7 @@ export const ProjectDetailsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUploadingSchedule, setIsUploadingSchedule] = useState(false);
   const [isUploadingExcel, setIsUploadingExcel] = useState(false);
-  const [indicadores, setIndicadores] = useState<{ iefAcum: number; iefin: number } | null>(null);
+  const [indicadores, setIndicadores] = useState<{ iefAcum: number; iefin: number; rociAcum: number } | null>(null);
   const scheduleInputRef = useRef<HTMLInputElement>(null);
   const excelInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,7 +68,7 @@ export const ProjectDetailsPage = () => {
 
       const { data: indicadoresData } = await supabase
         .from('IndicadoresProjeto')
-        .select('iefAcum, iefin')
+        .select('iefAcum, iefin, rociAcum')
         .eq('idProjeto', id)
         .maybeSingle();
 
@@ -287,20 +287,18 @@ export const ProjectDetailsPage = () => {
                 </div>
 
                 <div className="pt-6 space-y-8">
-                  <div className="grid grid-cols-2 gap-4">
-                    {[
-                      { title: 'IEF Acumulado', actual: (indicadores?.iefAcum || 0) * 100, planned: 100 },
-                      { title: 'IEFin', actual: (indicadores?.iefin || 0) * 100, planned: 100 },
-                    ].map((kpi, idx) => {
-                      const percentage = kpi.planned > 0 ? (kpi.actual / kpi.planned) * 100 : 0;
+                  {/* Gauge Component Helper */}
+                  {(() => {
+                    const renderGauge = (title: string, actual: number, planned: number = 100) => {
+                      const percentage = planned > 0 ? (actual / planned) * 100 : 0;
                       const clampedPercent = Math.min(Math.max(percentage, 0), 200);
                       const rotationDeg = -90 + (clampedPercent / 200) * 180;
                       const isHealthy = percentage >= 85 && percentage <= 100;
                       const textColor = isHealthy ? "text-emerald-500" : (percentage < 85 ? "text-amber-500" : "text-red-500");
 
                       return (
-                        <div key={idx} className="flex flex-col items-center">
-                          <h4 className="text-[9px] text-slate-400 font-black tracking-widest mb-4 text-center">{kpi.title}</h4>
+                        <div className="flex flex-col items-center">
+                          <h4 className="text-[9px] text-slate-400 font-black tracking-widest mb-4 text-center uppercase">{title}</h4>
                           <div className="h-[80px] w-full relative flex justify-center">
                             <div className="absolute inset-0 overflow-hidden" style={{ height: '80px' }}>
                               <ResponsiveContainer width="100%" height={160}>
@@ -342,8 +340,25 @@ export const ProjectDetailsPage = () => {
                           </div>
                         </div>
                       );
-                    })}
-                  </div>
+                    };
+
+                    return (
+                      <div className="space-y-12">
+                        {/* Top Gauge: ROCI Acumulado */}
+                        <div className="flex justify-center">
+                          <div className="w-1/2">
+                            {renderGauge('ROCI Acumulado', (indicadores?.rociAcum || 0) * 100)}
+                          </div>
+                        </div>
+
+                        {/* Bottom Row: IEF Acum e IEFin */}
+                        <div className="grid grid-cols-2 gap-4">
+                          {renderGauge('IEF Acumulado', (indicadores?.iefAcum || 0) * 100)}
+                          {renderGauge('IEFin', (indicadores?.iefin || 0) * 100)}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="space-y-6">
