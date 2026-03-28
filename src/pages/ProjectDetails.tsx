@@ -404,7 +404,8 @@ export const ProjectDetailsPage = () => {
                     setIsUploadingSchedule(true);
                     try {
                       const ext = file.name.split('.').pop();
-                      const filePath = `project-${project.id}/cronograma.${ext}`;
+                      const safeDesc = (project.descricao || 'projeto').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+                      const filePath = `project-${project.id}/${project.id}-${safeDesc}.${ext}`;
                       const { error: uploadError } = await supabase.storage
                         .from('cronogramas')
                         .upload(filePath, file, { upsert: true, cacheControl: '0' });
@@ -518,7 +519,8 @@ export const ProjectDetailsPage = () => {
                     setIsUploadingExcel(true);
                     try {
                       const ext = file.name.split('.').pop();
-                      const filePath = `project-${project.id}/cronograma-excel.${ext}`;
+                      const safeDesc = (project.descricao || 'projeto').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+                      const filePath = `project-${project.id}/${project.id}-${safeDesc}.${ext}`;
                       const { error: uploadError } = await supabase.storage
                         .from('cronogramas')
                         .upload(filePath, file, { upsert: true, cacheControl: '0' });

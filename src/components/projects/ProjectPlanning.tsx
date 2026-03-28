@@ -23,6 +23,8 @@ const formatCurrencyMil = (value: number) => {
 export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
   const [chartData, setChartData] = useState<any[]>([]);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [dadosCrono, setDadosCrono] = useState<any[]>([]);
+  const [cronoProj, setCronoProj] = useState<any>(null);
   const [totalPrevistoPN, setTotalPrevistoPN] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -37,12 +39,14 @@ export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
         const year = new Date().getFullYear();
         const futureYears = Array.from({ length: 2050 - 2026 }, (_, i) => 2027 + i);
 
-        const [previstoRes, realizadoRes, projetadoRes, pnRes, replanRes] = await Promise.all([
+        const [previstoRes, realizadoRes, projetadoRes, pnRes, replanRes, cronoProjRes, dadosCronoRes] = await Promise.all([
           supabase.from('FinanceiroPrevisto').select('*').eq('idProjeto', projectId).eq('anoCarga', year),
           supabase.from('FinanceiroRealizado').select('*').eq('idProjeto', projectId).eq('anoCarga', year),
           supabase.from('FinanceiroProjetado').select('*').eq('idProjeto', projectId).eq('anoCarga', year),
           supabase.from('PrevistoPN').select('ano, valor').eq('idProjeto', projectId),
-          supabase.from('ReplanPN').select('ano, valor').eq('idProjeto', projectId)
+          supabase.from('ReplanPN').select('ano, valor').eq('idProjeto', projectId),
+          supabase.from('CronogramaProjeto').select('*').eq('idProjeto', projectId).maybeSingle(),
+          supabase.from('DadosCronograma').select('*').eq('idProjeto', projectId)
         ]);
 
         const previstoData = previstoRes.data || [];
@@ -116,6 +120,8 @@ export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
         setChartData(data); // Chart uses only the 12 months (or however many entries have chartPrevisto)
         setTableData(fullData);
         setTotalPrevistoPN(totalPN);
+        setCronoProj(cronoProjRes.data);
+        setDadosCrono(dadosCronoRes.data || []);
       } catch (error) {
         console.error('Erro ao buscar dados do gráfico:', error);
       } finally {
@@ -323,38 +329,58 @@ export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Avanço Físico</h3>
-                <p className="text-xs text-slate-400 font-medium mt-1">Curva de desenvolvimento do projeto</p>
+                <p className="text-xs text-slate-400 font-medium mt-1">
+                  Curva de desenvolvimento do projeto
+                  {cronoProj?.dataStatus && ` • Status: ${cronoProj.dataStatus.split('-').reverse().join('/')}`}
+                </p>
               </div>
             </div>
 
             <div className="h-[300px] w-full">
               {(() => {
-                const physicalProgressData = monthNames.map((name, i) => {
-                  const monthNum = i + 1;
-                  const previsto = (monthNum / 12) * 100;
-                  
-                  // Mock physical progress: slightly behind planned
-                  let realizado = undefined;
-                  if (i < currentMonthIndex) {
-                    realizado = (monthNum / 12) * 88; // 88% of planned speed
-                  } else if (i === currentMonthIndex) {
-                    // Current month partial progress
-                    realizado = (monthNum / 12) * 88; 
+                const grouped = dadosCrono.reduce((acc, curr) => {
+                  const mY = curr.mesAno;
+                  if (!mY) return acc;
+                  if (!acc[mY]) {
+                    acc[mY] = { mesAno: mY, trabAcumLb: 0, trabAcum: 0, trabAcumReal: 0 };
                   }
+                  acc[mY].trabAcumLb += Number(curr.trabAcumLb) || 0;
+                  acc[mY].trabAcum += Number(curr.trabAcum) || 0;
+                  acc[mY].trabAcumReal += Number(curr.trabAcumReal) || 0;
+                  return acc;
+                }, {} as Record<string, any>);
 
-                  // Projected continues from last realized and catches up slightly
-                  let projetado = undefined;
-                  if (i >= currentMonthIndex - 1) {
-                    projetado = (monthNum / 12) * 95;
-                  }
+                const trabTotalLb = Number(cronoProj?.trabTotalLb) || 1;
+                const trabTotal = Number(cronoProj?.trabTotal) || 1;
 
-                  return {
-                    name,
-                    percentPrevisto: previsto,
-                    percentRealizado: realizado,
-                    percentProjetado: projetado
-                  };
-                });
+                let statusYear = 9999;
+                let statusMonth = 99;
+                if (cronoProj?.dataStatus) {
+                  const [y, m] = cronoProj.dataStatus.split('-');
+                  statusYear = Number(y);
+                  statusMonth = Number(m);
+                }
+
+                const physicalProgressData = Object.values(grouped)
+                  .map((item: any) => {
+                    const [mStr, yStr] = item.mesAno.split('-');
+                    const itemMonth = Number(mStr);
+                    const itemYear = Number(yStr);
+                    const isAfterStatus = itemYear > statusYear || (itemYear === statusYear && itemMonth > statusMonth);
+
+                    return {
+                      name: item.mesAno,
+                      percentPrevisto: (item.trabAcumLb / trabTotalLb) * 100,
+                      percentRealizado: isAfterStatus ? undefined : (item.trabAcumReal / trabTotal) * 100,
+                      percentProjetado: (item.trabAcum / trabTotal) * 100
+                    };
+                  })
+                  .sort((a: any, b: any) => {
+                    const [m1, y1] = a.name.split('-');
+                    const [m2, y2] = b.name.split('-');
+                    if (y1 !== y2) return Number(y1) - Number(y2);
+                    return Number(m1) - Number(m2);
+                  });
 
                 return (
                   <ResponsiveContainer width="100%" height="100%">
