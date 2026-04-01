@@ -1,11 +1,11 @@
 import React from 'react';
 import { Header } from '../components/layout/Header';
-import { 
-  BarChart3, 
-  PieChart, 
-  TrendingUp, 
-  FileText, 
-  Download, 
+import {
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  FileText,
+  Download,
   Filter,
   Calendar,
   Users,
@@ -22,7 +22,7 @@ export const ReportsPage = () => {
       description: 'Análise detalhada de KPIs, progresso e saúde de todos os projetos ativos.',
       icon: TrendingUp,
       color: 'bg-indigo-500',
-      stats: '12 projetos incluídos'
+      urlDownload: 'https://xjtvfsbjgdcnhulrebkw.supabase.co/storage/v1/object/public/assets/standards/Desempenho%20de%20projetos.xlsm'
     },
     {
       id: 'fin',
@@ -30,7 +30,7 @@ export const ReportsPage = () => {
       description: 'Acompanhamento de orçamentos, custos reais e variações financeiras por departamento.',
       icon: DollarSign,
       color: 'bg-emerald-500',
-      stats: 'R$ 4.2M em execução'
+      urlDownload: ''
     },
     {
       id: 'res',
@@ -38,7 +38,7 @@ export const ReportsPage = () => {
       description: 'Visão geral da ocupação da equipe, gargalos e disponibilidade de equipamentos.',
       icon: Users,
       color: 'bg-purple-500',
-      stats: '85% taxa de ocupação'
+      urlDownload: ''
     },
     {
       id: 'cron',
@@ -46,7 +46,7 @@ export const ReportsPage = () => {
       description: 'Monitoramento de marcos, caminhos críticos e atrasos previstos.',
       icon: Calendar,
       color: 'bg-amber-500',
-      stats: '4 marcos em atraso'
+      urlDownload: ''
     },
     {
       id: 'qual',
@@ -54,7 +54,7 @@ export const ReportsPage = () => {
       description: 'Matriz de riscos, planos de mitigação e indicadores de qualidade PMBOK.',
       icon: PieChart,
       color: 'bg-red-500',
-      stats: '2 riscos críticos'
+      urlDownload: ''
     },
     {
       id: 'exec',
@@ -62,14 +62,25 @@ export const ReportsPage = () => {
       description: 'Visão consolidada de alto nível para diretoria e stakeholders.',
       icon: FileText,
       color: 'bg-slate-700',
-      stats: 'Atualizado hoje'
+      urlDownload: ''
     }
   ];
+
+  const handleDownload = (url: string) => {
+    if (!url) return;
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.download = ''; // Sugere download se o navegador suportar para a URL
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Relatórios e BI" subtitle="Gere relatórios detalhados e insights baseados em dados para tomada de decisão." />
-      
+
       <div className="p-4 sm:p-8 space-y-8">
         {/* Quick Filters */}
         <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-wrap gap-4 items-center">
@@ -99,29 +110,40 @@ export const ReportsPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm hover:shadow-xl hover:shadow-indigo-600/5 transition-all group cursor-pointer overflow-hidden"
+              whileHover={report.urlDownload ? { y: -5 } : {}}
+              className={`bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm transition-all overflow-hidden ${report.urlDownload
+                ? 'hover:shadow-xl hover:shadow-indigo-600/5 group cursor-pointer'
+                : 'opacity-75 cursor-default'
+                }`}
+              onClick={() => report.urlDownload && handleDownload(report.urlDownload)}
             >
               <div className="p-6">
                 <div className={`${report.color} w-12 h-12 rounded-xl flex items-center justify-center text-white mb-6 shadow-lg shadow-current/20 group-hover:scale-110 transition-transform`}>
                   <report.icon size={24} />
                 </div>
-                
-                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2 group-hover:text-indigo-600 transition-colors">
+
+                <h3 className={`text-lg font-bold transition-colors ${report.urlDownload ? 'text-slate-900 dark:text-slate-50 group-hover:text-indigo-600' : 'text-slate-400 dark:text-slate-600'
+                  }`}>
                   {report.title}
                 </h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
                   {report.description}
                 </p>
-                
+
                 <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-zinc-800">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                    {report.stats}
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-300 dark:text-slate-700">
+                    {report.urlDownload ? 'Disponível para Download' : 'Aguardando Dados'}
                   </span>
-                  <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm">
+                  <button
+                    disabled={!report.urlDownload}
+                    className={`flex items-center gap-2 font-bold text-sm transition-all ${report.urlDownload
+                      ? 'text-indigo-600 hover:translate-x-1'
+                      : 'text-slate-200 dark:text-slate-800 cursor-not-allowed'
+                      }`}
+                  >
                     Gerar
                     <ChevronRight size={16} />
-                  </div>
+                  </button>
                 </div>
               </div>
             </motion.div>

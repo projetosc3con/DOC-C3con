@@ -5,18 +5,10 @@ import {
   Search,
   Filter,
   Edit2,
-  Trash2,
-  Mail,
-  CreditCard,
-  UserCircle,
   X,
-  Camera,
-  Save,
   Loader2,
-  UserX,
+  UserMinus,
   UserCheck,
-  CheckCircle2,
-  AlertCircle,
   RotateCcw
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -73,8 +65,8 @@ export const UsersPage = () => {
 
   const filteredUsers = users.filter(user => {
     const searchMatch = user.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                       user.email?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+
     const statusMatch = !filters.status || (filters.status === 'Ativo' ? user.ativo : !user.ativo);
     const recursoMatch = !filters.idRecurso || user.idRecurso === filters.idRecurso;
 
@@ -107,12 +99,17 @@ export const UsersPage = () => {
 
     if (window.confirm(message)) {
       try {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('Usuarios')
           .update({ ativo: !user.ativo })
-          .eq('uuid', user.uuid);
+          .eq('uuid', user.uuid)
+          .select();
 
         if (error) throw error;
+
+        if (!data || data.length === 0) {
+          throw new Error('Não foi possível alterar o status. Verifique suas permissões de administrador.');
+        }
         await fetchData();
       } catch (error: any) {
         alert(`Erro ao ${action}: ` + error.message);
@@ -146,8 +143,8 @@ export const UsersPage = () => {
               onClick={() => setIsFilterOpen(true)}
               className={cn(
                 "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 border rounded-lg text-sm font-bold transition-all relative",
-                activeFiltersCount > 0 
-                  ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300" 
+                activeFiltersCount > 0
+                  ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/20 dark:border-indigo-800 dark:text-indigo-300"
                   : "border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-zinc-800"
               )}
             >
@@ -251,7 +248,7 @@ export const UsersPage = () => {
                               )}
                               title={user.ativo ? "Inativar Usuário" : "Ativar Usuário"}
                             >
-                              {user.ativo ? <UserX size={16} /> : <UserCheck size={16} />}
+                              {user.ativo ? <UserMinus size={16} /> : <UserCheck size={16} />}
                             </button>
                           )}
                         </div>
@@ -266,12 +263,12 @@ export const UsersPage = () => {
       </div>
 
       {/* Modal Cadastro/Edição */}
-      <UserFormModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        editingUser={editingUser} 
-        dbResources={dbResources} 
-        onSuccess={fetchData} 
+      <UserFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        editingUser={editingUser}
+        dbResources={dbResources}
+        onSuccess={fetchData}
       />
 
       {/* Filter Offcanvas */}
@@ -310,7 +307,7 @@ export const UsersPage = () => {
                   {/* Status */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Status do Usuário</label>
-                    <select 
+                    <select
                       value={filters.status}
                       onChange={(e) => setFilters({ ...filters, status: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"
@@ -324,7 +321,7 @@ export const UsersPage = () => {
                   {/* Recurso */}
                   <div>
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Recurso Vinculado</label>
-                    <select 
+                    <select
                       value={filters.idRecurso}
                       onChange={(e) => setFilters({ ...filters, idRecurso: e.target.value })}
                       className="w-full bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none p-2.5"

@@ -54,15 +54,20 @@ export const UserFormModal = ({ isOpen, onClose, editingUser, dbResources, onSuc
 
       if (editingUser) {
         // Atualizar usuário existente
-        const { error: dbError } = await supabase
+        const { data, error: dbError } = await supabase
           .from('Usuarios')
           .update({
             fullName: formData.fullName,
             idRecurso: formData.idRecurso || null
           })
-          .eq('uuid', editingUser.uuid);
+          .eq('uuid', editingUser.uuid)
+          .select();
 
         if (dbError) throw dbError;
+
+        if (!data || data.length === 0) {
+          throw new Error('Não foi possível atualizar o usuário. Verifique se você tem permissão ou se o registro ainda existe.');
+        }
         
         setStatusMessage({ type: 'success', text: 'Usuário atualizado com sucesso!' });
         setTimeout(() => {
