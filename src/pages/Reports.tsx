@@ -68,10 +68,15 @@ export const ReportsPage = () => {
 
   const handleDownload = (url: string) => {
     if (!url) return;
+    
+    // Para forçar o download em vez de abrir no navegador (especialmente no Edge/Chrome com arquivos Office)
+    // O Supabase Storage aceita o parâmetro ?download para definir o header Content-Disposition: attachment
+    const downloadUrl = url.includes('?') ? `${url}&download=` : `${url}?download=`;
+    
     const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.download = ''; // Sugere download se o navegador suportar para a URL
+    link.href = downloadUrl;
+    link.setAttribute('download', ''); // Reforça a intenção de download
+    link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -82,25 +87,6 @@ export const ReportsPage = () => {
       <Header title="Relatórios e BI" subtitle="Gere relatórios detalhados e insights baseados em dados para tomada de decisão." />
 
       <div className="p-4 sm:p-8 space-y-8">
-        {/* Quick Filters */}
-        <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm flex flex-wrap gap-4 items-center">
-          <div className="flex items-center gap-2 text-sm font-bold text-slate-500 mr-4">
-            <Filter size={18} />
-            Filtros Globais:
-          </div>
-          <select className="bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
-            <option>Este Mês</option>
-            <option>Último Trimestre</option>
-            <option>Ano Atual</option>
-            <option>Personalizado</option>
-          </select>
-          <select className="bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 rounded-lg text-xs font-bold px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-600">
-            <option>Todos os Departamentos</option>
-            <option>TI</option>
-            <option>Marketing</option>
-            <option>Infraestrutura</option>
-          </select>
-        </div>
 
         {/* Reports Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
