@@ -7,6 +7,7 @@ import { ProjectFlows } from '../components/projects/ProjectFlows';
 import { ProjectComments } from '../components/projects/ProjectComments';
 import { ProjectTeam } from '../components/projects/ProjectTeam';
 import { ProjectPlanning } from '../components/projects/ProjectPlanning';
+import { ProjectTimelineModal } from '../components/projects/ProjectTimelineModal';
 import { ArrowLeft, AlertCircle, FileText, Loader2, Users, Calendar, FileSpreadsheet, Info, History, Workflow, Target, FileSignature, Calculator, PanelRightClose, PanelLeft, CloudDownload, CloudUpload } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -33,6 +34,7 @@ export const ProjectDetailsPage = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const initialTab = searchParams.get('tab') as 'info' | 'milestones' | 'team' | 'comments' | 'flows' | 'planning' || 'info';
   const [activeTab, setActiveTab] = useState<'info' | 'milestones' | 'team' | 'comments' | 'flows' | 'planning'>(initialTab);
+  const [isTimelineOpen, setIsTimelineOpen] = useState(false);
 
   useEffect(() => {
     const tab = searchParams.get('tab');
@@ -374,16 +376,33 @@ export const ProjectDetailsPage = () => {
                   </div>
 
                   <div className="pt-4 border-t border-slate-100 dark:border-zinc-800">
-                    <p className="text-[10px] text-slate-400 font-black tracking-widest mb-2 uppercase">Gestor do projeto</p>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={project.fotoRes1 || `https://ui-avatars.com/api/?name=${encodeURIComponent(project.responsavel1 || 'User')}&background=6366f1&color=fff`}
-                        alt="Responsável"
-                        className="w-12 h-12 rounded-xl border-2 border-indigo-600/10 shadow-sm shadow-indigo-600/5 object-cover"
-                        referrerPolicy="no-referrer"
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Lado Esquerdo: Gestor */}
                       <div>
-                        <p className="text-sm font-bold text-slate-700 dark:text-slate-100">Responsável Titular</p>
+                        <p className="text-[10px] text-slate-400 font-black tracking-widest mb-2 uppercase">Gestor do projeto</p>
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={project.fotoRes1 || `https://ui-avatars.com/api/?name=${encodeURIComponent(project.responsavel1 || 'User')}&background=6366f1&color=fff`}
+                            alt="Responsável"
+                            className="w-10 h-10 rounded-xl border-2 border-indigo-600/10 shadow-sm shadow-indigo-600/5 object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-slate-700 dark:text-slate-100 truncate">Responsável Titular</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Lado Direito: Timeline Button */}
+                      <div className="flex flex-col justify-end">
+                        <button
+                          onClick={() => setIsTimelineOpen(true)}
+                          className="flex items-center justify-center gap-2 w-full py-2.5 bg-slate-50 dark:bg-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-zinc-700 rounded-xl transition-all group overflow-hidden relative"
+                        >
+                          <div className="absolute inset-0 bg-indigo-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                          <History size={14} className="text-indigo-600 group-hover:scale-110 transition-transform relative z-10" />
+                          <span className="text-[10px] font-black tracking-widest relative z-10">Timeline</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -626,6 +645,11 @@ export const ProjectDetailsPage = () => {
           )}
         </div>
       </div>
+      <ProjectTimelineModal
+        isOpen={isTimelineOpen}
+        onClose={() => setIsTimelineOpen(false)}
+        projectId={project.id}
+      />
     </div>
   );
 };

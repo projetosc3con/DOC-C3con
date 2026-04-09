@@ -59,6 +59,8 @@ export interface Projeto {
   escopo: string | null;
   cronogramaUrl: string | null;
   cronogramaExcelUrl: string | null;
+  ciclicidade: number | null;
+  projetoAntecessor: number | null;
 }
 
 export interface Comentario {
@@ -76,6 +78,7 @@ export interface TipoProjeto {
   id: string;
   nome: string;
   descricao: string | null;
+  urlCronogramaPadrao: string | null;
   createdAt: string;
 }
 

@@ -35,7 +35,8 @@ export const NewProjectPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [isCyclic, setIsCyclic] = useState(false);
+
   const [users, setUsers] = useState<Usuario[]>([]);
   const [projectTypes, setProjectTypes] = useState<TipoProjeto[]>([]);
   const [classifications, setClassifications] = useState<string[]>([]);
@@ -52,7 +53,10 @@ export const NewProjectPage = () => {
     idTipo: '',
     tipoContratacao: '',
     responsavel1: '',
-    fotoRes1: ''
+    fotoRes1: '',
+    dataInicio: '',
+    ciclicidade: '',
+    projetoAntecessor: ''
   });
 
   const [teamMembers, setTeamMembers] = useState<MembroEquipeForm[]>([]);
@@ -70,7 +74,7 @@ export const NewProjectPage = () => {
 
         if (usersRes.data) setUsers(usersRes.data);
         if (typesRes.data) setProjectTypes(typesRes.data);
-        
+
         if (listsRes.data) {
           const classList = listsRes.data.find(l => l.nomeLista === 'Classificações');
           const hiringList = listsRes.data.find(l => l.nomeLista === 'Contratações');
@@ -91,11 +95,11 @@ export const NewProjectPage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    
+
     if (name === 'idTipo') {
       const selectedType = projectTypes.find(t => t.id === value);
-      setFormData(prev => ({ 
-        ...prev, 
+      setFormData(prev => ({
+        ...prev,
         idTipo: value,
         tipo: selectedType ? selectedType.nome : ''
       }));
@@ -106,9 +110,9 @@ export const NewProjectPage = () => {
 
   const handleUserChange = (uuid: string) => {
     const selectedUser = users.find(u => u.uuid === uuid);
-    setFormData(prev => ({ 
-      ...prev, 
-      responsavel1: uuid, 
+    setFormData(prev => ({
+      ...prev,
+      responsavel1: uuid,
       fotoRes1: selectedUser?.profileUrl || ''
     }));
   };
@@ -150,7 +154,7 @@ export const NewProjectPage = () => {
 
     try {
       setIsSubmitting(true);
-      
+
       const { data: projectData, error: projectError } = await supabase.from('Projetos').insert([{
         descricao: formData.descricao,
         escopo: formData.escopo,
@@ -164,11 +168,13 @@ export const NewProjectPage = () => {
         dataInicio: formData.dataInicio || null,
         responsavel1: formData.responsavel1 || null,
         fotoRes1: formData.fotoRes1 || null,
-        status: true
+        status: true,
+        ciclicidade: isCyclic && formData.ciclicidade ? parseFloat(formData.ciclicidade) : null,
+        projetoAntecessor: isCyclic && formData.projetoAntecessor ? parseInt(formData.projetoAntecessor) : null
       }]).select().single();
 
       if (projectError) throw projectError;
-      
+
       // Save Team Members
       if (teamMembers.length > 0) {
         const teamData = teamMembers.map(m => ({
@@ -179,11 +185,11 @@ export const NewProjectPage = () => {
           profileUrl: m.profileUrl,
           atribuicao: m.atribuicao
         }));
-        
+
         const { error: teamError } = await supabase.from('EquipeProjeto').insert(teamData);
         if (teamError) throw teamError;
       }
-      
+
       navigate('/projects');
     } catch (err) {
       console.error('Erro ao salvar projeto:', err);
@@ -201,25 +207,25 @@ export const NewProjectPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-zinc-950">
-      <Header 
-        title="Novo Projeto" 
-        subtitle="Inicie um novo projeto preenchendo as informações multietapa." 
+      <Header
+        title="Novo Projeto"
+        subtitle="Inicie um novo projeto preenchendo as informações multietapa."
       />
-      
+
       <div className="p-4 sm:p-8 max-w-4xl mx-auto w-full space-y-8">
         {/* Progress Bar */}
         <div className="relative">
           <div className="flex justify-between items-center relative z-10">
             {steps.map((step, index) => (
               <div key={index} className="flex flex-col items-center gap-2">
-                <div 
+                <div
                   className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 border-2",
-                    currentStep === index + 1 
-                      ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20" 
+                    currentStep === index + 1
+                      ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20"
                       : currentStep > index + 1
-                      ? "bg-emerald-500 border-emerald-500 text-white"
-                      : "bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 text-slate-400"
+                        ? "bg-emerald-500 border-emerald-500 text-white"
+                        : "bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800 text-slate-400"
                   )}
                 >
                   {currentStep > index + 1 ? <CheckCircle2 size={18} /> : step.icon}
@@ -234,7 +240,7 @@ export const NewProjectPage = () => {
             ))}
           </div>
           <div className="absolute top-5 left-0 right-0 h-0.5 bg-slate-200 dark:bg-zinc-800 -z-0">
-            <motion.div 
+            <motion.div
               className="h-full bg-indigo-600"
               initial={{ width: '0%' }}
               animate={{ width: `${((currentStep - 1) / (steps.length - 1)) * 100}%` }}
@@ -398,8 +404,8 @@ export const NewProjectPage = () => {
                           onClick={() => setFormData(prev => ({ ...prev, prioridade: p }))}
                           className={cn(
                             "flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all border-2",
-                            formData.prioridade === p 
-                              ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20" 
+                            formData.prioridade === p
+                              ? "bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/20"
                               : "bg-slate-50 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 text-slate-400 hover:border-indigo-600/50"
                           )}
                         >
@@ -407,6 +413,56 @@ export const NewProjectPage = () => {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Cíclico */}
+                  <div className="space-y-4 md:col-span-2 border-t border-slate-100 dark:border-zinc-800 pt-4">
+                    <label className="flex items-center gap-3 cursor-pointer group w-max">
+                      <div className="relative flex items-center justify-center w-5 h-5 border-2 border-slate-300 dark:border-zinc-700 rounded-md group-hover:border-indigo-500 transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={isCyclic}
+                          onChange={(e) => setIsCyclic(e.target.checked)}
+                          className="absolute opacity-0 w-full h-full cursor-pointer z-10"
+                        />
+                        {isCyclic && <CheckCircle2 size={14} className="text-indigo-600 absolute" />}
+                      </div>
+                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 transition-colors">Projeto cíclico</span>
+                    </label>
+
+                    <AnimatePresence>
+                      {isCyclic && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden p-1"
+                        >
+                          <div className="">
+                            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Período em meses</label>
+                            <input
+                              type="number"
+                              name="ciclicidade"
+                              value={formData.ciclicidade}
+                              onChange={handleChange}
+                              placeholder="Ex: 12"
+                              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                            />
+                          </div>
+                          <div className="">
+                            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest">Antecessor</label>
+                            <input
+                              type="number"
+                              name="projetoAntecessor"
+                              value={formData.projetoAntecessor}
+                              onChange={handleChange}
+                              placeholder="ID inteiro (opcional)"
+                              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100"
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               </motion.div>
@@ -446,8 +502,8 @@ export const NewProjectPage = () => {
                               : "border-slate-100 dark:border-zinc-800 hover:border-indigo-300 dark:hover:border-indigo-900"
                           )}
                         >
-                          <img 
-                            src={u.profileUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'U')}&background=6366f1&color=fff`} 
+                          <img
+                            src={u.profileUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'U')}&background=6366f1&color=fff`}
                             alt={u.fullName || ''}
                             className="w-12 h-12 rounded-xl object-cover shadow-sm"
                           />
@@ -491,7 +547,7 @@ export const NewProjectPage = () => {
                         {users.map((u) => {
                           const isMember = teamMembers.some(m => m.uid === u.uuid);
                           return (
-                            <div 
+                            <div
                               key={u.uuid}
                               className={cn(
                                 "flex flex-col p-4 rounded-2xl border-2 transition-all group",
@@ -501,8 +557,8 @@ export const NewProjectPage = () => {
                               )}
                             >
                               <div className="flex items-center gap-4 mb-3">
-                                <img 
-                                  src={u.profileUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'U')}&background=6366f1&color=fff`} 
+                                <img
+                                  src={u.profileUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.fullName || 'U')}&background=6366f1&color=fff`}
                                   alt={u.fullName}
                                   className="w-10 h-10 rounded-xl object-cover"
                                 />
@@ -517,7 +573,7 @@ export const NewProjectPage = () => {
                                   onClick={() => toggleTeamMember(u)}
                                   className={cn(
                                     "p-2 rounded-lg transition-all",
-                                    isMember 
+                                    isMember
                                       ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
                                       : "bg-slate-100 dark:bg-zinc-800 text-slate-400 hover:text-indigo-600"
                                   )}
@@ -525,15 +581,15 @@ export const NewProjectPage = () => {
                                   {isMember ? <CheckCircle2 size={16} /> : <Plus size={16} />}
                                 </button>
                               </div>
-                              
+
                               {isMember && (
-                                <motion.div 
+                                <motion.div
                                   initial={{ opacity: 0, height: 0 }}
                                   animate={{ opacity: 1, height: 'auto' }}
                                   className="space-y-1"
                                 >
                                   <label className="text-[9px] font-black text-emerald-600 dark:text-emerald-500 uppercase">Atribuição / Papel</label>
-                                  <input 
+                                  <input
                                     type="text"
                                     placeholder="Ex: Arquiteto de Software"
                                     value={teamMembers.find(m => m.uid === u.uuid)?.atribuicao || ''}
@@ -562,7 +618,7 @@ export const NewProjectPage = () => {
               {currentStep === 1 ? <ArrowLeft size={18} /> : <ChevronLeft size={18} />}
               {currentStep === 1 ? 'Cancelar' : 'Anterior'}
             </button>
-            
+
             <button
               type="submit"
               disabled={isSubmitting}

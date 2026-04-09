@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { 
@@ -11,7 +11,8 @@ import {
   GripVertical,
   Clock,
   Layout,
-  Loader2
+  Loader2,
+  CloudUpload
 } from 'lucide-react';
 import { motion, AnimatePresence, Reorder } from 'motion/react';
 import { cn } from '../lib/utils';
@@ -34,6 +35,9 @@ export const NewProjectTypePage = () => {
   const [loading, setLoading] = useState(false);
   const [typeName, setTypeName] = useState('');
   const [description, setDescription] = useState('');
+  const [urlCronogramaPadrao, setUrlCronogramaPadrao] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [milestones, setMilestones] = useState<MilestoneRow[]>([
     { id: crypto.randomUUID(), nome: '', duracaoPadrao: 5, fase: 'Planejamento', ordem: 1 }
   ]);
@@ -67,6 +71,7 @@ export const NewProjectTypePage = () => {
           if (typeData) {
             setTypeName(typeData.nome);
             setDescription(typeData.descricao || '');
+            setUrlCronogramaPadrao(typeData.urlCronogramaPadrao || null);
           }
 
           // Fetch milestones
@@ -120,7 +125,10 @@ export const NewProjectTypePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!typeName) return;
+    if (!typeName || !urlCronogramaPadrao) {
+      alert('O Nome do Tipo e o Cronograma Padrão (.mpp) são obrigatórios.');
+      return;
+    }
 
     setLoading(true);
     try {
@@ -130,7 +138,7 @@ export const NewProjectTypePage = () => {
         // Update TiposProjeto
         const { error: typeError } = await supabase
           .from('TiposProjeto')
-          .update({ nome: typeName, descricao: description })
+          .update({ nome: typeName, descricao: description, urlCronogramaPadrao })
           .eq('id', id);
         
         if (typeError) throw typeError;
@@ -142,7 +150,7 @@ export const NewProjectTypePage = () => {
         // Insert TiposProjeto
         const { data: typeData, error: typeError } = await supabase
           .from('TiposProjeto')
-          .insert([{ nome: typeName, descricao: description }])
+          .insert([{ nome: typeName, descricao: description, urlCronogramaPadrao }])
           .select()
           .single();
           
@@ -244,6 +252,91 @@ export const NewProjectTypePage = () => {
                   rows={3}
                   className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm focus:ring-2 focus:ring-indigo-600 outline-none text-slate-900 dark:text-slate-100 transition-all resize-none"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Cronograma Padrão (.mpp) *</label>
+                <div className="flex flex-col gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".mpp,application/vnd.ms-project"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      
+                      if (!typeName.trim()) {
+                        alert('Por favor, defina o nome do tipo primeiro antes de anexar o cronograma padrão.');
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                        return;
+                      }
+
+                      setIsUploading(true);
+                      try {
+                        const ext = file.name.split('.').pop() || 'mpp';
+                        const safeTypeName = typeName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+                        const filePath = `standards/${safeTypeName}.${ext}`;
+                        
+                        const { error: uploadError } = await supabase.storage
+                          .from('assets')
+                          .upload(filePath, file, { upsert: true, cacheControl: '0' });
+                          
+                        if (uploadError) throw uploadError;
+
+                        const { data: { publicUrl } } = supabase.storage
+                          .from('assets')
+                          .getPublicUrl(filePath);
+
+                        setUrlCronogramaPadrao(publicUrl);
+                      } catch (err) {
+                        console.error('Erro ao fazer upload do cronograma:', err);
+                        alert('Erro ao fazer upload do formato.');
+                      } finally {
+                        setIsUploading(false);
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                      }
+                    }}
+                  />
+                  {urlCronogramaPadrao ? (
+                     <div className="flex justify-between items-center bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800 p-4 rounded-xl">
+                        <div className="flex items-center gap-3 text-emerald-700 dark:text-emerald-400">
+                          <FileText size={20} />
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold">Arquivo anexado com sucesso</span>
+                            <a href={urlCronogramaPadrao} target="_blank" rel="noreferrer" className="text-[10px] underline uppercase tracking-widest opacity-80 hover:opacity-100">Visualizar atual</a>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isUploading}
+                          className="text-xs font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 px-4 py-2 border border-indigo-200 dark:border-indigo-800 rounded-lg bg-white dark:bg-zinc-800 disabled:opacity-50 transition-all flex items-center gap-2 shadow-sm"
+                        >
+                          {isUploading ? <Loader2 size={14} className="animate-spin inline" /> : <CloudUpload size={14} />}
+                          Substituir
+                        </button>
+                     </div>
+                  ) : (
+                     <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={isUploading || !typeName}
+                        className={cn(
+                          "w-full flex justify-center items-center gap-3 py-6 border-2 border-dashed border-slate-300 dark:border-zinc-700 rounded-xl text-sm font-bold transition-all",
+                          !typeName ? "text-slate-400 opacity-60 bg-slate-50 dark:bg-zinc-800/50 cursor-not-allowed" :
+                          isUploading ? "text-indigo-500 border-indigo-300 bg-indigo-50/50 dark:bg-indigo-900/10 cursor-wait" : 
+                          "text-slate-600 dark:text-slate-300 hover:text-indigo-600 hover:border-indigo-400 hover:bg-slate-50 dark:hover:bg-zinc-800"
+                        )}
+                      >
+                       {isUploading ? <Loader2 size={24} className="animate-spin text-indigo-500" /> : <CloudUpload size={24} className={typeName ? "text-indigo-500" : ""} />}
+                       <div className="flex flex-col items-start text-left">
+                         <span className="text-sm font-bold">{typeName ? (isUploading ? 'Anexando cronograma...' : 'Clique para anexar o cronograma (.mpp)') : 'Preencha o nome do tipo para liberar o anexo'}</span>
+                         <span className="text-[10px] opacity-70 uppercase tracking-widest mt-0.5">Formato aceito: MS Project (.mpp)</span>
+                       </div>
+                     </button>
+                  )}
+                </div>
               </div>
             </div>
           </motion.div>
