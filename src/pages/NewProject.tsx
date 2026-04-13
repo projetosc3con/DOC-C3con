@@ -511,7 +511,7 @@ export const NewProjectPage = () => {
                             <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate group-hover:text-indigo-600 transition-colors">
                               {u.fullName}
                             </p>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase truncate">
+                            <p className="text-[10px] text-slate-500 font-bold truncate">
                               {u.email}
                             </p>
                           </div>
@@ -564,7 +564,7 @@ export const NewProjectPage = () => {
                                 />
                                 <div className="flex-1 min-w-0">
                                   <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">{u.fullName}</p>
-                                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">
+                                  <p className="text-[9px] font-black text-slate-400 tracking-tighter">
                                     {dbResources.find(r => r.id === u.idRecurso)?.nomeExibicao || 'Recurso'}
                                   </p>
                                 </div>

@@ -372,9 +372,9 @@ export const ProjectTeam = ({ projectId, responsavelId }: ProjectTeamProps) => {
                       <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 truncate">
                         {member.recurso || 'Recurso não definido'}
                       </p>
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 dark:bg-zinc-800 rounded-lg border border-slate-100 dark:border-zinc-700">
-                        <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400">ATRIBUIÇÃO</span>
-                        <span className="text-[10px] font-black text-indigo-600 tracking-tighter truncate max-w-[120px]">
+                      <div className="flex flex-col items-start gap-0.5 px-3 py-2 bg-slate-50 dark:bg-zinc-800 rounded-lg border border-slate-100 dark:border-zinc-700 w-full sm:w-auto">
+                        <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">ATRIBUIÇÃO</span>
+                        <span className="text-[10px] font-black text-indigo-600 tracking-tighter break-words">
                           {member.atribuicao || 'Colaborador'}
                         </span>
                       </div>

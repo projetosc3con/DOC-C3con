@@ -499,7 +499,15 @@ export const ProjectDetailsPage = () => {
                         ) : (
                           <>
                             {canEdit ? (
-                              <>
+                              <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                                <a
+                                  href="https://xjtvfsbjgdcnhulrebkw.supabase.co/storage/v1/object/public/assets/standards/ID-NOME-PROJETO.mpp"
+                                  className="flex items-center gap-1.5 px-1 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-[10px] xl:text-xs font-bold transition-all border border-white/20 whitespace-nowrap"
+                                  title="Baixar modelo (.mpp)"
+                                >
+                                  <CloudDownload size={14} />
+                                  Modelo
+                                </a>
                                 <input
                                   ref={scheduleInputRef}
                                   type="file"
@@ -510,12 +518,12 @@ export const ProjectDetailsPage = () => {
                                 <button
                                   onClick={() => scheduleInputRef.current?.click()}
                                   disabled={isUploadingSchedule}
-                                  className="w-12 h-12 flex items-center justify-center bg-white text-indigo-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 disabled:opacity-60"
+                                  className="w-10 h-10 flex items-center justify-center bg-white text-indigo-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 disabled:opacity-60 shrink-0"
                                   title="Anexar cronograma"
                                 >
-                                  {isUploadingSchedule ? <Loader2 size={20} className="animate-spin" /> : <CloudUpload size={20} />}
+                                  {isUploadingSchedule ? <Loader2 size={16} className="animate-spin" /> : <CloudUpload size={16} />}
                                 </button>
-                              </>
+                              </div>
                             ) : (
                               <div className="text-[10px] italic opacity-60">Sem arquivo</div>
                             )}
@@ -614,7 +622,15 @@ export const ProjectDetailsPage = () => {
                         ) : (
                           <>
                             {canEdit ? (
-                              <>
+                              <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                                <a
+                                  href="https://xjtvfsbjgdcnhulrebkw.supabase.co/storage/v1/object/public/assets/standards/ID-NOME-PROJETO.xlsm"
+                                  className="flex items-center gap-1.5 px-1 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-[10px] xl:text-xs font-bold transition-all border border-white/20 whitespace-nowrap"
+                                  title="Baixar modelo (.xlsm)"
+                                >
+                                  <CloudDownload size={14} />
+                                  Modelo
+                                </a>
                                 <input
                                   ref={excelInputRef}
                                   type="file"
@@ -625,12 +641,12 @@ export const ProjectDetailsPage = () => {
                                 <button
                                   onClick={() => excelInputRef.current?.click()}
                                   disabled={isUploadingExcel}
-                                  className="w-12 h-12 flex items-center justify-center bg-white text-emerald-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 disabled:opacity-60"
+                                  className="w-10 h-10 flex items-center justify-center bg-white text-emerald-600 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 disabled:opacity-60 shrink-0"
                                   title="Anexar cronograma"
                                 >
-                                  {isUploadingExcel ? <Loader2 size={20} className="animate-spin" /> : <CloudUpload size={20} />}
+                                  {isUploadingExcel ? <Loader2 size={16} className="animate-spin" /> : <CloudUpload size={16} />}
                                 </button>
-                              </>
+                              </div>
                             ) : (
                               <div className="text-[10px] italic opacity-60">Sem arquivo</div>
                             )}

@@ -136,7 +136,7 @@ export const Header = ({ title, subtitle }: HeaderProps) => {
 
   return (
     <>
-      <header className="sticky top-0 z-10 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-4 sm:px-8 py-4 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-30 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-4 sm:px-8 py-4 flex items-center justify-between gap-4">
         <div className="min-w-0">
           <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-50 truncate">{title}</h2>
           {subtitle && <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 truncate">{subtitle}</p>}
