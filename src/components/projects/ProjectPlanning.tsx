@@ -290,32 +290,79 @@ export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-slate-50 dark:bg-zinc-800/50">
-                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 sticky left-0 bg-slate-50 dark:bg-zinc-800 z-10 w-40">Categoria</th>
-                    {tableData.slice(0, 12).map(col => (
-                      <th key={col.name} className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center min-w-[100px]">{col.name}</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 sticky left-0 bg-slate-50 dark:bg-zinc-800 z-10 w-40">Mês</th>
+                    {rows.map(col => (
+                      <th key={col} className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center min-w-[100px]">{col}</th>
                     ))}
-                    <th className="px-6 py-4 text-[10px] font-black text-indigo-600 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-right sticky right-0 bg-slate-50 dark:bg-zinc-800 z-10">Total</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
-                  {rows.map((rowLabel) => {
-                    const key = rowLabel.toLowerCase() as 'previsto' | 'realizado' | 'projetado';
-                    return (
-                      <tr key={rowLabel} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                        <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 sticky left-0 bg-white dark:bg-zinc-900 z-10 border-r border-slate-50 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
-                          {rowLabel}
-                        </td>
-                        {tableData.slice(0, 12).map((data, idx) => (
-                          <td key={idx} className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
+                  {tableData.slice(0, 12).map((data, idx) => (
+                    <tr key={data.name} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                      <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 sticky left-0 bg-white dark:bg-zinc-900 z-10 border-r border-slate-50 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                        {data.name}
+                      </td>
+                      {rows.map((rowLabel) => {
+                        const key = rowLabel.toLowerCase() as 'previsto' | 'realizado' | 'projetado';
+                        return (
+                          <td key={key} className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
                             {data[key] === 0 && key === 'realizado' && idx >= currentMonthIndex ? '--' : formatCurrency(data[key])}
                           </td>
-                        ))}
-                        <td className="px-6 py-4 text-xs font-black text-slate-800 dark:text-slate-100 text-right sticky right-0 bg-white dark:bg-zinc-900 z-10 border-l border-slate-50 dark:border-zinc-800 shadow-[-2px_0_5px_rgba(0,0,0,0.02)]">
+                        );
+                      })}
+                    </tr>
+                  ))}
+                  {/* Range Rows */}
+                  {(() => {
+                    const futureData = tableData.slice(12);
+                    const range27_30 = futureData.filter(d => Number(d.name) >= 2027 && Number(d.name) <= 2030);
+                    const range31_50 = futureData.filter(d => Number(d.name) >= 2031 && Number(d.name) <= 2050);
+
+                    const ranges = [
+                      {
+                        name: '2027-30',
+                        previsto: range27_30.reduce((acc, curr) => acc + (curr.previsto || 0), 0),
+                        projetado: range27_30.reduce((acc, curr) => acc + (curr.projetado || 0), 0),
+                      },
+                      {
+                        name: '2031-50',
+                        previsto: range31_50.reduce((acc, curr) => acc + (curr.previsto || 0), 0),
+                        projetado: range31_50.reduce((acc, curr) => acc + (curr.projetado || 0), 0),
+                      }
+                    ];
+
+                    return ranges.map(range => (
+                      <tr key={range.name} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                        <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 sticky left-0 bg-white dark:bg-zinc-900 z-10 border-r border-slate-50 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                          {range.name}
+                        </td>
+                        {rows.map((rowLabel) => {
+                          const key = rowLabel.toLowerCase() as 'previsto' | 'realizado' | 'projetado';
+                          if (key === 'realizado') {
+                            return <td key={key} className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">--</td>;
+                          }
+                          return (
+                            <td key={key} className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
+                              {formatCurrency(range[key as 'previsto' | 'projetado'])}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ));
+                  })()}
+                  <tr className="bg-slate-50 dark:bg-zinc-800/50">
+                    <td className="px-6 py-4 text-xs font-black text-slate-800 dark:text-slate-100 sticky left-0 bg-slate-50 dark:bg-zinc-800 z-10 border-r border-slate-100 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                      Total
+                    </td>
+                    {rows.map((rowLabel) => {
+                      const key = rowLabel.toLowerCase() as 'previsto' | 'realizado' | 'projetado';
+                      return (
+                        <td key={key} className="px-6 py-4 text-xs font-black text-indigo-600 text-center border-t-2 border-slate-200 dark:border-zinc-700">
                           {formatCurrencyMil(calculateTotal(key))}
                         </td>
-                      </tr>
-                    );
-                  })}
+                      );
+                    })}
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -452,67 +499,94 @@ export const ProjectPlanning = ({ projectId }: { projectId: number }) => {
             </div>
           </div>
 
-          {/* Annual Bar Chart */}
-          <div className="bg-white dark:bg-zinc-900/50 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
-            <div className="p-6 border-b border-slate-100 dark:border-zinc-800 mb-6">
-              <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Visão Anual (2026 - 2050)</h3>
+          {/* Physical Progress Table */}
+          <div className="bg-white dark:bg-zinc-900/50 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 dark:border-zinc-800">
+              <h3 className="text-sm font-black uppercase tracking-widest text-slate-800 dark:text-slate-100">Detalhamento Físico</h3>
             </div>
-            
-            <div className="h-[300px] w-full">
-              {(() => {
-                const yearlyData = [
-                  {
-                    name: String(new Date().getFullYear()),
-                    previsto: tableData.slice(0, 12).reduce((acc, curr) => acc + (curr.previsto || 0), 0),
-                    projetado: tableData.slice(0, 12).reduce((acc, curr) => acc + (curr.projetado || 0), 0),
-                  },
-                  ...tableData.slice(12)
-                ];
+            <div className="overflow-x-auto scrollbar-custom">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-slate-50 dark:bg-zinc-800">
+                  <tr>
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 sticky left-0 bg-slate-50 dark:bg-zinc-800 z-30">Mês/Ano</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center">Trab Acum (Lb)</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center">Trab Acum (Proj)</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-zinc-800 text-center">Trab Acum (Real)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800">
+                  {(() => {
+                    const grouped = dadosCrono.reduce((acc, curr) => {
+                      const mY = curr.mesAno;
+                      if (!mY) return acc;
+                      if (!acc[mY]) {
+                        acc[mY] = { mesAno: mY, trabAcumLb: 0, trabAcum: 0, trabAcumReal: 0 };
+                      }
+                      acc[mY].trabAcumLb += Number(curr.trabAcumLb) || 0;
+                      acc[mY].trabAcum += Number(curr.trabAcum) || 0;
+                      acc[mY].trabAcumReal += Number(curr.trabAcumReal) || 0;
+                      return acc;
+                    }, {} as Record<string, any>);
 
-                return (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={yearlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                      <XAxis
-                        dataKey="name"
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fontSize: 9, fill: '#64748b', fontWeight: 'bold' }}
-                        interval={2}
-                      />
-                      <YAxis
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fontSize: 10, fill: '#64748b', fontWeight: 'bold' }}
-                        tickFormatter={(value) => `R$${value / 1000000}M`}
-                      />
-                      <Tooltip
-                        cursor={{ fill: 'rgba(99, 102, 241, 0.05)' }}
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '11px', fontWeight: 'bold' }}
-                        formatter={(value: number) => formatCurrency(value)}
-                      />
-                      <Legend
-                        iconType="circle"
-                        wrapperStyle={{ fontSize: '11px', fontWeight: 'bold', paddingTop: '10px' }}
-                      />
-                      <Bar
-                        dataKey="previsto"
-                        name="Previsto"
-                        fill="#6366f1"
-                        radius={[4, 4, 0, 0]}
-                        barSize={12}
-                      />
-                      <Bar
-                        dataKey="projetado"
-                        name="Replan/Projetado"
-                        fill="#f59e0b"
-                        radius={[4, 4, 0, 0]}
-                        barSize={12}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                );
-              })()}
+                    const sortedGroupedData = Object.values(grouped).sort((a: any, b: any) => {
+                      const [m1, y1] = a.mesAno.split('-');
+                      const [m2, y2] = b.mesAno.split('-');
+                      if (y1 !== y2) return Number(y1) - Number(y2);
+                      return Number(m1) - Number(m2);
+                    });
+
+                    const monthsUntil26 = sortedGroupedData.filter((data: any) => {
+                      const [_, y] = data.mesAno.split('-');
+                      return Number(y) <= 2026;
+                    });
+
+                    const findLastUntil = (year: number) => {
+                      const filtered = (sortedGroupedData as any[]).filter((d: any) => {
+                        const [_, y] = d.mesAno.split('-');
+                        return Number(y) <= year;
+                      });
+                      return (filtered[filtered.length - 1] as any) || { trabAcumLb: 0, trabAcum: 0, trabAcumReal: 0 };
+                    };
+
+                    const statusAt2030 = findLastUntil(2030);
+                    const statusAt2050 = findLastUntil(2050);
+
+                    const ranges = [
+                      {
+                        mesAno: '2027-30',
+                        trabAcumLb: statusAt2030.trabAcumLb,
+                        trabAcum: statusAt2030.trabAcum,
+                        trabAcumReal: statusAt2030.trabAcumReal,
+                      },
+                      {
+                        mesAno: '2031-50',
+                        trabAcumLb: statusAt2050.trabAcumLb,
+                        trabAcum: statusAt2050.trabAcum,
+                        trabAcumReal: statusAt2050.trabAcumReal,
+                      }
+                    ];
+
+                    const displayData = [...monthsUntil26, ...ranges];
+
+                    return displayData.map((data: any) => (
+                      <tr key={data.mesAno} className="hover:bg-slate-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                        <td className="px-6 py-4 text-xs font-bold text-slate-600 dark:text-slate-300 sticky left-0 bg-white dark:bg-zinc-900 z-10 border-r border-slate-50 dark:border-zinc-800 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">
+                          {data.mesAno}
+                        </td>
+                        <td className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
+                          {data.trabAcumLb.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
+                          {data.trabAcum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-6 py-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center">
+                          {data.trabAcumReal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
